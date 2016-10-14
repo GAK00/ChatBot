@@ -7,7 +7,8 @@ import java.util.ArrayList;
  * Students will complete methods as part * of the project. * @author Cody
  * Henrichsen * @version 1.0 10/14/15
  */
-public class Chatbot {
+public class Chatbot
+{
 	private ArrayList<String> memesList;
 	private ArrayList<String> politicalTopicList;
 	private String userName;
@@ -17,10 +18,12 @@ public class Chatbot {
 	 * * Creates an instance of the Chatbot with the supplied username. * @param
 	 * userName The username for the chatbot.
 	 */
-	public Chatbot(String userName) {
+	public Chatbot(String userName)
+	{
 	}
 
-	private void buildMemesList() {
+	private void buildMemesList()
+	{
 	}
 
 	private void buildPoliticalTopicsList() {
