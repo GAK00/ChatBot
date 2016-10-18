@@ -20,13 +20,16 @@ public class Chatbot
 	 */
 	public Chatbot(String userName)
 	{
+		memesList = new ArrayList<String>();
+		politicalTopicList = new ArrayList<String>();
 	}
 
 	private void buildMemesList()
 	{
 	}
 
-	private void buildPoliticalTopicsList() {
+	private void buildPoliticalTopicsList()
+	{
 	}
 
 	/**
@@ -34,8 +37,11 @@ public class Chatbot
 	 * String is empty or null, otherwise returns true. * @param currentInput * @return
 	 * A true or false based on the length of the supplied String.
 	 */
-	public boolean lengthChecker(String currentInput) {
-		return false;
+	public boolean lengthChecker(String currentInput)
+	{
+		boolean hasLength = false;
+		if(currentInput != null &&!currentInput.equals("")){hasLength = true;}
+		return hasLength;
 	}
 
 	/**
@@ -46,7 +52,8 @@ public class Chatbot
 	 *            The supplied String to be checked. * @return Whether it
 	 *            matches the content area.
 	 */
-	public boolean contentChecker(String currentInput) {
+	public boolean contentChecker(String currentInput)
+	{
 		return false;
 	}
 
@@ -59,7 +66,8 @@ public class Chatbot
 	 *            The supplied String to be checked. * @return Whether the
 	 *            String is contained in the ArrayList.
 	 */
-	public boolean politicalTopicChecker(String currentInput) {
+	public boolean politicalTopicChecker(String currentInput)
+	{
 		return false;
 	}
 
@@ -71,7 +79,8 @@ public class Chatbot
 	 *            The supplied String to be checked. * @return Whether the
 	 *            supplied String is a recognized meme.
 	 */
-	public boolean memeChecker(String currentInput) {
+	public boolean memeChecker(String currentInput)
+	{
 		return false;
 	}
 
@@ -79,7 +88,8 @@ public class Chatbot
 	 * * Returns the username of this Chatbot instance. * @return The username
 	 * of the Chatbot.
 	 */
-	public String getUserName() {
+	public String getUserName()
+	{
 		return null;
 	}
 
@@ -87,7 +97,8 @@ public class Chatbot
 	 * * Returns the content area for this Chatbot instance. * @return The
 	 * content area for this Chatbot instance.
 	 */
-	public String getContent() {
+	public String getContent()
+	{
 		return null;
 	}
 
@@ -95,23 +106,26 @@ public class Chatbot
 	 * * Getter method for the memesList object. * @return The reference to the
 	 * meme list.
 	 */
-	public ArrayList<String> getMemesList() {
-		return null;
+	public ArrayList<String> getMemesList()
+	{
+		return memesList;
 	}
 
 	/**
 	 * * Getter method for the politicalTopicList object. * @return The
 	 * reference to the political topic list.
 	 */
-	public ArrayList<String> getPoliticalTopicList() {
-		return null;
+	public ArrayList<String> getPoliticalTopicList()
+	{
+		return politicalTopicList;
 	}
 
 	/**
 	 * * Updates the content area for this Chatbot instance. * @param content
 	 * The updated value for the content area.
 	 */
-	public void setContent(String content) {
+	public void setContent(String content)
+	{
 	}
 
 }
