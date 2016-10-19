@@ -20,12 +20,33 @@ public class Chatbot
 	 */
 	public Chatbot(String userName)
 	{
+		this.userName = userName;
 		memesList = new ArrayList<String>();
 		politicalTopicList = new ArrayList<String>();
+		buildMemesList();
 	}
 
 	private void buildMemesList()
 	{
+		memesList.add("harambe");
+		memesList.add("doge");
+		memesList.add("cute animals");
+		memesList.add("catz");
+		memesList.add("grumpy cat");
+		memesList.add("dat boi");
+		memesList.add("willy wonka");
+		memesList.add("john cena");
+		memesList.add("pepe");
+		memesList.add("rare pepe");
+		memesList.add("shreckt");
+		memesList.add("dank");
+		memesList.add("get a job");
+		memesList.add("sanic");
+		memesList.add("420");
+		memesList.add("puns");
+		memesList.add("bad puns");
+		memesList.add("dad jokes");
+
 	}
 
 	private void buildPoliticalTopicsList()
@@ -81,7 +102,9 @@ public class Chatbot
 	 */
 	public boolean memeChecker(String currentInput)
 	{
-		return false;
+		boolean isMeme = false;
+		if(currentInput != null && memesList.contains(currentInput)){isMeme = true;}
+		return isMeme;
 	}
 
 	/**
@@ -90,7 +113,7 @@ public class Chatbot
 	 */
 	public String getUserName()
 	{
-		return null;
+		return userName;
 	}
 
 	/**
@@ -99,7 +122,7 @@ public class Chatbot
 	 */
 	public String getContent()
 	{
-		return null;
+		return content;
 	}
 
 	/**
@@ -126,6 +149,31 @@ public class Chatbot
 	 */
 	public void setContent(String content)
 	{
+		this.content = content;
+	}
+
+	public boolean keyboardMashChecker(String string)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean inputHTMLChecker(String string)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean twitterChecker(String string)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean quitChecker(String string)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
