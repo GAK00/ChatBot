@@ -24,4 +24,10 @@ public class ChatController
 		}
 	}
 
+	public Chatbot getChatbot()
+	{
+
+		return stupidBot;
+	}
+
 }

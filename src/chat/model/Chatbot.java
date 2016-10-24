@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Chatbot
 {
 	private ArrayList<String> memesList;
-	private ArrayList<String> politicalTopicList;
+	private ArrayList<String> politicalTopicsList;
 	private String userName;
 	private String content;
 
@@ -22,8 +22,9 @@ public class Chatbot
 	{
 		this.userName = userName;
 		memesList = new ArrayList<String>();
-		politicalTopicList = new ArrayList<String>();
+		politicalTopicsList = new ArrayList<String>();
 		buildMemesList();
+		buildPoliticalTopicsList();
 	}
 
 	private void buildMemesList()
@@ -51,6 +52,27 @@ public class Chatbot
 
 	private void buildPoliticalTopicsList()
 	{
+		politicalTopicsList.add("Democrat");
+		politicalTopicsList.add("Republican");
+		politicalTopicsList.add("11/8/16");
+		politicalTopicsList.add("conservative");
+		politicalTopicsList.add("Clinton");
+		politicalTopicsList.add("Trump");
+		politicalTopicsList.add("Kaine");
+		politicalTopicsList.add("Pence");
+		politicalTopicsList.add("Stein");
+		politicalTopicsList.add("Johnson");
+		politicalTopicsList.add("liberal");
+		politicalTopicsList.add("Congress");
+		politicalTopicsList.add("President");
+		politicalTopicsList.add("Judge");
+		politicalTopicsList.add("Court");
+		politicalTopicsList.add("Hillary");
+		politicalTopicsList.add("War");
+		politicalTopicsList.add("Economy");
+		politicalTopicsList.add("election");
+		
+		
 	}
 
 	/**
@@ -75,7 +97,9 @@ public class Chatbot
 	 */
 	public boolean contentChecker(String currentInput)
 	{
-		return false;
+		boolean contentContained = false;
+		if(currentInput.contains(content.substring(0, content.length()))){contentContained = true;}
+		return contentContained;
 	}
 
 	/**
@@ -89,7 +113,9 @@ public class Chatbot
 	 */
 	public boolean politicalTopicChecker(String currentInput)
 	{
-		return false;
+		boolean isPolitical = false;
+		if(currentInput != null && politicalTopicsList.contains(currentInput)){isPolitical = true;}
+		return isPolitical;
 	}
 
 	/**
@@ -103,7 +129,9 @@ public class Chatbot
 	public boolean memeChecker(String currentInput)
 	{
 		boolean isMeme = false;
+		currentInput = currentInput.toLowerCase();
 		if(currentInput != null && memesList.contains(currentInput)){isMeme = true;}
+		
 		return isMeme;
 	}
 
@@ -140,7 +168,7 @@ public class Chatbot
 	 */
 	public ArrayList<String> getPoliticalTopicList()
 	{
-		return politicalTopicList;
+		return politicalTopicsList;
 	}
 
 	/**
@@ -151,29 +179,100 @@ public class Chatbot
 	{
 		this.content = content;
 	}
-
-	public boolean keyboardMashChecker(String string)
+/**
+ * Test a Input to see if it is just mashing
+ * @param Input your input
+ * @return if input is mashing or not
+ */
+	public boolean keyboardMashChecker(String Input)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		boolean isMashing = true;
+	boolean isAcronym = false;
+	if(Input.contains(".")){
+		for(int counter = 0; counter<Input.length();counter++){
+			if(Character.isUpperCase(Input.charAt(counter))){
+				isAcronym = true;
+			}
+		}}
+	boolean isWord = false;
+	if(Input.contains("a")||Input.contains("A")||Input.contains("e")||Input.contains("E")||Input.contains("i")||Input.contains("I")||Input.contains("o")||Input.contains("O")||Input.contains("u")||Input.contains("U"))
+	{
+		isWord = true;
 	}
-
-	public boolean inputHTMLChecker(String string)
-	{
-		// TODO Auto-generated method stub
-		return false;
+	if(isAcronym||isWord){
+		isMashing = false;
 	}
-
-	public boolean twitterChecker(String string)
-	{
-		// TODO Auto-generated method stub
-		return false;
+		return isMashing;
 	}
-
-	public boolean quitChecker(String string)
+/**
+ * checks if a string is a valid HTML tag
+ * @param Input input string 
+ * @return if the string is a valid HTML tag
+ */
+	public boolean inputHTMLChecker(String Input)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		boolean valid = false;
+		boolean contentInBrakets = false;
+		if(Input.startsWith("<")&&Input.endsWith(">")){
+			int testCond1 = Input.split("<").length;
+			int testCond2= Input.split(">").length +1;
+			
+			if(testCond1 == testCond2){
+				
+				for(int pos = 0; pos<Input.length();pos++){
+					if(Input.charAt(pos) == '<'){
+						if(Input.charAt(pos+1)=='>'){valid = false;
+						break;}
+						else{
+							pos++;
+							
+							while(Input.charAt(pos)!='>'){
+								if(contentInBrakets){pos++;}
+								else{if(Input.charAt(pos)!= ' '){contentInBrakets = true;
+								pos++;
+								}
+								else{pos++;}}
+							}
+						}
+					}
+				}
+				
+			}
+		}
+		if(contentInBrakets){
+			if(Input.contains("HREF")){
+				if(Input.split("HREF").length==Input.split(".html").length){}
+				else{contentInBrakets = false;}
+			}
+		}
+		if(contentInBrakets){
+			valid = true;
+		}
+		return valid;
+	}
+/**
+ * Test if a string is a valid tweet
+ * @param Input input string
+ * @return if the string is a valid tweet
+ */
+	public boolean twitterChecker(String Input)
+	{
+		boolean ValidTweet = false;
+		if(Input.startsWith("@")||Input.startsWith("#")){
+			ValidTweet = true;
+		}
+		return ValidTweet;
+	}
+/**
+ * searches for quit and returns true if quit is the input
+ * @param Input the input
+ * @return wheter or not it was the word quit
+ */
+	public boolean quitChecker(String Input)
+	{
+		boolean quit = false;
+		if(Input.equalsIgnoreCase("quit")){quit = true;}
+		return quit;
 	}
 
 }
