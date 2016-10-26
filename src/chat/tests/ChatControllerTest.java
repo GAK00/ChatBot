@@ -28,8 +28,7 @@ public class ChatControllerTest
 	@Test
 	public void testChatController()
 	{
-		assertNotNull("GUI Frame not installed",testController.getBaseFrame());
-		assertTrue("Incorrect display data type", testController.getBaseFrame() instanceof ChatFrame);
+]		assertTrue("Incorrect display data type", testController.getBaseFrame() instanceof ChatFrame);
 		assertNotNull("Chatbot not initialized", testController.getChatbot());
 		assertTrue("Incorrect data type", testController.getChatbot() instanceof Chatbot);
 	}

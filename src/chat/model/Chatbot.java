@@ -25,6 +25,7 @@ public class Chatbot
 		politicalTopicsList = new ArrayList<String>();
 		buildMemesList();
 		buildPoliticalTopicsList();
+		content = "spicy boi";
 	}
 
 	private void buildMemesList()
@@ -274,5 +275,7 @@ public class Chatbot
 		if(Input.equalsIgnoreCase("quit")){quit = true;}
 		return quit;
 	}
+	
+	
 
 }
