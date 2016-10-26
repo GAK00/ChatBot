@@ -16,13 +16,16 @@ public class ChatController
 
 	public void start()
 	{
-		String response = display.collectResponse("What do you wan to talk about ?");
-
+		String response = display.collectUserTextWithPics("What do you wan to talk about ?",null);
+		
 		while (stupidBot.lengthChecker(response))
 		{
-			display.diplayMessage(useChatbotCheckers(response));;
-			response = display.collectResponse("Oh, you want to talk about " + response + "? Tell me more..."); 
 			
+			display.diplayMessage(useChatbotCheckers(response));;
+			response = display.collectResponse("Oh, you want to talk about " + response + "? Tell me more...");
+			if(response == null){
+				System.exit(0);
+			}
 		}
 	}
 
@@ -39,7 +42,12 @@ public class ChatController
 		}
 		if(stupidBot.memeChecker(input))
 		{
-			checkedInput += "\nYou like memes!\n";
+			int memeFeelings = display.collectuserOptionWithPicture("Do you Like memes", "images/doYouLikeMemes.png");
+			if(memeFeelings == 0){
+			checkedInput += "\nYou like memes!\n";}
+			else{
+				checkedInput += "\nYou don't like memes :(\n";
+			}
 			understoodContent = true;
 		}
 		if(stupidBot.contentChecker(input))
