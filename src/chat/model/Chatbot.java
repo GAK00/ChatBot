@@ -185,10 +185,12 @@ public class Chatbot
  * @param Input your input
  * @return if input is mashing or not
  */
-	public boolean keyboardMashChecker(String Input)
+	public boolean keyboardMashChecker(String IntialInput)
 	{
 		boolean isMashing = true;
 	boolean isAcronym = false;
+	String[] strings = IntialInput.split(" ");
+	for(String Input : strings){
 	if(Input.contains(".")){
 		for(int counter = 0; counter<Input.length();counter++){
 			if(Character.isUpperCase(Input.charAt(counter))){
@@ -203,6 +205,9 @@ public class Chatbot
 	if(isAcronym||isWord){
 		isMashing = false;
 	}
+	else{
+		return true;
+	}}
 		return isMashing;
 	}
 /**
