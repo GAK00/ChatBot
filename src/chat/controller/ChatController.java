@@ -22,6 +22,7 @@ public class ChatController
 
 	public void start()
 	{
+		baseFrame.getPanel().setPicture("images/chatbot.png");
 		String response = display.collectUserTextWithPics("What do you wan to talk about ?", null);
 
 		while (stupidBot.lengthChecker(response))
