@@ -18,6 +18,7 @@ public class ChatPanel extends JPanel
 	private SpringLayout layout;
 	private JLabel pictureDisplay;
 	private int width;
+	private String Conversation;
 
 	public ChatPanel(ChatController controller)
 	{
@@ -31,6 +32,7 @@ public class ChatPanel extends JPanel
 		this.pictureDisplay = new JLabel();
 		layout.putConstraint(SpringLayout.NORTH, pictureDisplay, 169, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.SOUTH, pictureDisplay, 0, SpringLayout.SOUTH, this);
+		Conversation = "";
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -87,6 +89,12 @@ public class ChatPanel extends JPanel
 		this.width = width;
 	}
 	private void enterButtonClicked(){
+		if(!input.getText().equals("")){
+		Conversation += "\n"+input.getText();
+		Conversation += "\n"+controller.useChatbotCheckers(input.getText());
+		input.setText("");
+		mainDialog.setText(Conversation);
+		}
 		
 	}
 }

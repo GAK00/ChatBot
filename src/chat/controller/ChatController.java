@@ -23,34 +23,7 @@ public class ChatController
 	public void start()
 	{
 		baseFrame.getPanel().setPicture("images/chatbot.png");
-		String response = display.collectUserTextWithPics("What do you wan to talk about ?", null);
-
-		while (stupidBot.lengthChecker(response))
-		{
-			int chatChoice = rand.nextInt(5)+1;
-
-			display.diplayMessage(useChatbotCheckers(response));
-			if(chatChoice == 1){
-			response = display.collectResponse("Oh, you want to talk about " + response + "? Tell me more...");}
-			else if(chatChoice == 2){
-				response = display.collectUserTextWithPics("Do you know any memes", "images/doYouLikeMemes.png");
-			}
-			else if(chatChoice ==3){
-				response = display.collectUserTextWithPics("What are yout thoughts on politics", "images/Politics.png");
-			}
-			else if(chatChoice == 4){
-				response = display.collectUserTextWithPics("Do you know any memes", "images/Internet.png");
-			}
-			else if(chatChoice == 5){
-				response = display.collectResponse("I don't know much about " + response + " please elaborate");
-			}
-			if (response == null)
-			{
-				System.exit(0);
-			}
-			useChatbotCheckers(response);
-			
-		}
+		
 	}
 
 	public Chatbot getChatbot()
@@ -59,7 +32,7 @@ public class ChatController
 		return stupidBot;
 	}
 
-	private String useChatbotCheckers(String input)
+	public String useChatbotCheckers(String input)
 	{
 		String checkedInput = "I have no idea what you mean about " + input;
 		boolean understoodContent = false;
@@ -115,7 +88,6 @@ public class ChatController
 		if (understoodContent)
 		{
 			checkedInput = checkedInput.substring(35, checkedInput.length());
-			understoodContent = true;
 		}
 
 		return checkedInput;
