@@ -1,19 +1,23 @@
 package chat.controller;
 
+import chat.view.ChatFrame;
 import chat.model.Chatbot;
 import chat.view.ChatViewer;
+
 import java.util.Random;
 public class ChatController
 {
 	private Chatbot stupidBot;
 	private ChatViewer display;
 	private Random rand;
+	private ChatFrame baseFrame;
 
 	public ChatController()
 	{
 		stupidBot = new Chatbot("wall-e");
 		display = new ChatViewer();
 		rand = new Random();
+		baseFrame = new ChatFrame(this);
 	}
 
 	public void start()
@@ -114,6 +118,11 @@ public class ChatController
 		}
 
 		return checkedInput;
+	}
+
+	public ChatFrame getBaseFrame()
+	{
+		return baseFrame;
 	}
 
 }

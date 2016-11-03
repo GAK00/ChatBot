@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import chat.controller.ChatController;
 import chat.model.Chatbot;
+import chat.view.ChatFrame;
 
 public class ChatControllerTest
 {
