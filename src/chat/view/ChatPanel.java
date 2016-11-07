@@ -90,8 +90,8 @@ public class ChatPanel extends JPanel
 	}
 	private void enterButtonClicked(){
 		if(!input.getText().equals("")){
-		Conversation += "\n"+input.getText();
-		Conversation += "\n"+controller.useChatbotCheckers(input.getText());
+		Conversation = "\n"+input.getText() + Conversation;
+		Conversation = "\n"+controller.useChatbotCheckers(input.getText()) + Conversation;
 		input.setText("");
 		mainDialog.setText(Conversation);
 		}
