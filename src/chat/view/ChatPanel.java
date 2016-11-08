@@ -75,6 +75,11 @@ public class ChatPanel extends JPanel
 				enterButtonClicked();
 			}
 		});
+		input.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent Enter){
+			enterButtonClicked();
+		}}
+				);
 	}
 	public void setPicture(String picture){
 		this.remove(pictureDisplay);
@@ -90,8 +95,7 @@ public class ChatPanel extends JPanel
 	}
 	private void enterButtonClicked(){
 		if(!input.getText().equals("")){
-		Conversation = "\n"+input.getText() + Conversation;
-		Conversation = "\n"+controller.useChatbotCheckers(input.getText()) + Conversation;
+		Conversation = controller.Chat(input.getText()) + Conversation;
 		input.setText("");
 		mainDialog.setText(Conversation);
 		}
