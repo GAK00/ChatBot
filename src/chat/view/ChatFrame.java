@@ -3,6 +3,8 @@ package chat.view;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
 
@@ -15,13 +17,16 @@ public class ChatFrame extends JFrame
 	private ChatPanel panel;
 	private int windowWidth;
 	private int windowHeight;
+	
 
 	public ChatFrame(ChatController controller)
 	{
 		super();
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.controller = controller;
 		this.panel = new ChatPanel(controller);
 		setup();
+		setupFrameListener();
 	}
 
 	private void setup()
@@ -41,6 +46,47 @@ public class ChatFrame extends JFrame
 		this.setContentPane(panel);
 		this.setVisible(true);
 		
+	}
+	
+	public void setupFrameListener(){
+		this.addComponentListener(
+				new ComponentListener()
+				{
+
+					@Override
+					public void componentResized(ComponentEvent e)
+					{
+						System.out.println(panel.getMyKnownWith());
+						System.out.println(controller.getBaseFrame().getWidth());
+						if(panel.getMyKnownWith() != controller.getBaseFrame().getWidth()){
+						panel.setWidth(controller.getBaseFrame().getWidth());
+						panel.setPicture(panel.getPicture());
+						System.out.println(controller.getBaseFrame().getWidth());}
+						
+					}
+
+					@Override
+					public void componentMoved(ComponentEvent e)
+					{
+						
+					}
+
+					@Override
+					public void componentShown(ComponentEvent e)
+					{
+						panel.setVisible(true);
+						controller.getBaseFrame().setVisible(true);
+						
+					}
+
+					@Override
+					public void componentHidden(ComponentEvent e)
+					{
+						panel.setVisible(false);
+						controller.getBaseFrame().setVisible(false);
+						
+					}
+				});
 	}
 	public ChatPanel getPanel(){
 		return panel;

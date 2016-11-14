@@ -19,6 +19,7 @@ public class ChatPanel extends JPanel
 	private JLabel pictureDisplay;
 	private int width;
 	private String Conversation;
+	private String picture;
 
 	public ChatPanel(ChatController controller)
 	{
@@ -82,13 +83,22 @@ public class ChatPanel extends JPanel
 				);
 	}
 	public void setPicture(String picture){
+		this.picture = picture;
 		this.remove(pictureDisplay);
+		layout.removeLayoutComponent(pictureDisplay);
 		ImageIcon image = new ImageIcon(getClass().getResource(picture));
 		this.pictureDisplay = new JLabel(image);
 		layout.putConstraint(SpringLayout.NORTH, pictureDisplay, 5, SpringLayout.SOUTH, mainDialog);
 		layout.putConstraint(SpringLayout.WEST, pictureDisplay, ((width/2)-(image.getIconWidth()/2)), SpringLayout.WEST, this);
 		layout.putConstraint(SpringLayout.SOUTH, pictureDisplay, 0, SpringLayout.SOUTH, this);
 		this.add(pictureDisplay);
+	}
+	public int getMyKnownWith()
+	{
+		return width;
+	}
+	public String getPicture(){
+		return picture;
 	}
 	public void setWidth(int width){
 		this.width = width;
