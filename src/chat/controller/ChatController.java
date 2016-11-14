@@ -132,6 +132,7 @@ public class ChatController
 			if (Float.compare(stupidBot.getMemeLevel(), 5) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
+				currentTopicProbe = 0;
 				if (qToAsk == 1)
 				{
 					question = "Stop talking about Memes!!";
@@ -146,6 +147,7 @@ public class ChatController
 			} else if (Float.compare(stupidBot.getPoliticalLevel(), 5) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/Politics.png");
+				currentTopicProbe = 1;
 				if (qToAsk == 1)
 				{
 					question = "Your are really poltically involved aren't you";
@@ -160,6 +162,7 @@ public class ChatController
 			} else if (Float.compare(stupidBot.getTechLevel(), 5) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/Internet.png");
+				currentTopicProbe = 2;
 				if (qToAsk == 1)
 				{
 					question = "You spend a fair amount of time on computers dont you";
@@ -183,6 +186,8 @@ public class ChatController
 			if (Float.compare(stupidBot.getMemeLevel(), 3) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
+				
+				currentTopicProbe = 0;
 				if (qToAsk == 1)
 				{
 					question = "Tell me more about memes";
@@ -199,6 +204,7 @@ public class ChatController
 			} else if (Float.compare(stupidBot.getPoliticalLevel(), 3) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/Politics.png");
+				currentTopicProbe = 1;
 				if (qToAsk == 1)
 				{
 					question = "You dabble in politics don't you";
@@ -214,6 +220,7 @@ public class ChatController
 			} else if (Float.compare(stupidBot.getTechLevel(), 3) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/Internet.png");
+				currentTopicProbe = 2;
 				if (qToAsk == 1)
 				{
 					question = "You know how to use computers, right";
@@ -234,13 +241,16 @@ public class ChatController
 			int qToAsk = rand.nextInt(3) + 1;
 			if(qToAsk == 1){
 				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
+				currentTopicProbe = 0;
 				question = "Tell me about memes";
 			}
 			else if(qToAsk == 2){
 				baseFrame.getPanel().setPicture("images/Politics.png");
+				currentTopicProbe = 1;
 				question = "tell me about politics";
 			}
 			else if(qToAsk == 3){
+				currentTopicProbe = 2;
 				baseFrame.getPanel().setPicture("images/Internet.png");
 				question = "tell me more about tech";
 			}
@@ -341,7 +351,9 @@ public class ChatController
 
 	public ChatFrame getBaseFrame()
 	{
+		
 		return baseFrame;
+		
 	}
 
 }
