@@ -288,6 +288,11 @@ public class Chatbot
 		}
 		return quit;
 	}
+	
+	public int getEmotion(){
+		int emotionState = 0;
+		return emotionState;
+	}
 
 	public float getMemeLevel()
 	{
