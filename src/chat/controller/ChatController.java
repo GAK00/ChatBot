@@ -13,6 +13,10 @@ public class ChatController
 	private Random rand;
 	private ChatFrame baseFrame;
 	private boolean yesNo;
+	//0 for memes
+	//1 for politics
+	//2 for tech
+	private int currentTopicProbe = 0;
 
 	public ChatController()
 	{
@@ -73,10 +77,12 @@ public class ChatController
 			if (Float.compare(stupidBot.getMemeLevel(), 10) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
+				currentTopicProbe = 0;
 				if (qToAsk == 1)
 				{
 					int meme = rand.nextInt(stupidBot.getMemesList().size());
 					question = "Do you like the " + stupidBot.getMemesList().get(meme) + " meme";
+					
 					yesNo = true;
 				} else if (qToAsk == 2)
 				{
@@ -89,6 +95,7 @@ public class ChatController
 			} else if (Float.compare(stupidBot.getPoliticalLevel(), 10) >= 0)
 			{
 				baseFrame.getPanel().setPicture("images/Politics.png");
+				currentTopicProbe = 1;
 				if (qToAsk == 1)
 				{
 					int politic = rand.nextInt(stupidBot.getPoliticalTopicList().size());
@@ -104,6 +111,7 @@ public class ChatController
 				}
 			} else if (Float.compare(stupidBot.getTechLevel(), 10) >= 0)
 			{
+				currentTopicProbe=2;
 				baseFrame.getPanel().setPicture("images/Internet.png");
 				if (qToAsk == 1)
 				{
