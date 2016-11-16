@@ -38,25 +38,41 @@ public class ChatController
 
 	public String Chat(String input)
 	{
-		
-		
-		return generateResponse(input);
+		String response = generateResponse(input);
+		setPicture();
+		return response;
 	}
-	
+	private void setPicture()
+	{
+		if(stupidBot.getLastProbe()==0)
+		{
+			baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
+		}
+		
+		if(stupidBot.getLastProbe()==1)
+		{
+			baseFrame.getPanel().setPicture("images/Politics.png");
+		}
+		
+		if(stupidBot.getLastProbe()==2)
+		{
+			baseFrame.getPanel().setPicture("images/Internet.png");
+		}
+	}
 	private String yesNoCheckers(String input)
 	{
 		String response = "";
 		if (input.toLowerCase().contains("yes"))
 		{
-			if(stupidBot.getLastProbe()==0)
+			if(stupidBot.getLastProbe()==0&&Float.compare(stupidBot.getMemeLevel(), 10) < 0)
 			{
 				stupidBot.setMemeLevel(stupidBot.getMemeLevel()+1.5f);
 			}
-			if(stupidBot.getLastProbe()==1)
+			if(stupidBot.getLastProbe()==1&&Float.compare(stupidBot.getPoliticalLevel(), 10) < 0)
 			{
 				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel()+1.5f);
 			}
-			if(stupidBot.getLastProbe()==2)
+			if(stupidBot.getLastProbe()==2&&Float.compare(stupidBot.getTechLevel(), 10) < 0)
 			{
 				stupidBot.setTechLevel(stupidBot.getTechLevel()+1.5f);
 			}
@@ -64,15 +80,15 @@ public class ChatController
 
 		} else if (input.toLowerCase().contains("no"))
 		{
-			if(stupidBot.getLastProbe()==0)
+			if(stupidBot.getLastProbe()==0&&Float.compare(stupidBot.getMemeLevel(), 0) > 0)
 			{
 				stupidBot.setMemeLevel(stupidBot.getMemeLevel()-1.5f);
 			}
-			if(stupidBot.getLastProbe()==1)
+			if(stupidBot.getLastProbe()==1&&Float.compare(stupidBot.getPoliticalLevel(), 0) > 0)
 			{
 				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel()-1.5f);
 			}
-			if(stupidBot.getLastProbe()==2)
+			if(stupidBot.getLastProbe()==2&&Float.compare(stupidBot.getTechLevel(), 0) > 0)
 			{
 				stupidBot.setTechLevel(stupidBot.getTechLevel()-1.5f);
 			}

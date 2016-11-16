@@ -310,11 +310,7 @@ public class Chatbot
 		return quit;
 	}
 
-	public int getEmotion()
-	{
-		int emotionState = 0;
-		return emotionState;
-	}
+	
 
 	public float getMemeLevel()
 	{
@@ -410,7 +406,8 @@ public class Chatbot
 					question = "How much time do you spend on computer";
 				} else if (qToAsk == 3)
 				{
-					question = "Computers Love you too";
+					question = "Do you use twitter to much";
+					yesNo = true;
 				}
 			}
 		} else if (Float.compare(memeLevel, 5) >= 0 || Float.compare(politicalLevel, 5) >= 0
@@ -422,13 +419,15 @@ public class Chatbot
 				currentTopicProbe = 0;
 				if (qToAsk == 1)
 				{
-					question = "Stop talking about Memes!!";
+					question = "Memes are great do you agree";
+					yesNo = true;
 				} else if (qToAsk == 2)
 				{
 					question = "Wow you talk know a lot of memes, What other do you know";
 				} else if (qToAsk == 3)
 				{
 					question = "Are you a meme lord";
+					yesNo = true;
 				}
 
 			} else if (Float.compare(politicalLevel, 5) >= 0)
@@ -450,7 +449,7 @@ public class Chatbot
 				currentTopicProbe = 2;
 				if (qToAsk == 1)
 				{
-					question = "You spend a fair amount of time on computers dont you";
+					question = "You spend a fair amount of time on computers don't you";
 					yesNo = true;
 				} else if (qToAsk == 2)
 				{
@@ -480,7 +479,7 @@ public class Chatbot
 					yesNo = true;
 				} else if (qToAsk == 3)
 				{
-					question = "do you Meme often";
+					question = "do you meme often";
 					yesNo = true;
 				}
 
@@ -496,7 +495,7 @@ public class Chatbot
 					question = "tell me more about politics";
 				} else if (qToAsk == 3)
 				{
-					question = "Do you think politics are dumb";
+					question = "Do you think politics are cool";
 					yesNo = true;
 				}
 			} else if (Float.compare(techLevel, 3) >= 0)
