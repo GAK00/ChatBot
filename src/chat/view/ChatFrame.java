@@ -56,12 +56,9 @@ public class ChatFrame extends JFrame
 					@Override
 					public void componentResized(ComponentEvent e)
 					{
-						System.out.println(panel.getMyKnownWith());
-						System.out.println(controller.getBaseFrame().getWidth());
 						if(panel.getMyKnownWith() != controller.getBaseFrame().getWidth()){
 						panel.setWidth(controller.getBaseFrame().getWidth());
-						panel.setPicture(panel.getPicture());
-						System.out.println(controller.getBaseFrame().getWidth());}
+						panel.setPicture(panel.getPicture());}
 						
 					}
 

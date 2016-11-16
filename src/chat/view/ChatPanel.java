@@ -49,7 +49,7 @@ public class ChatPanel extends JPanel
 		mainDialog.setEnabled(false);
 		mainDialog.setLineWrap(true);
 		mainDialog.setWrapStyleWord(true);
-		mainDialog.setText("Hello My Name Is ChatBot");
+		mainDialog.setText(controller.getGreeting()+","+" My Name Is ChatBot");
 		
 		this.add(input);
 	}

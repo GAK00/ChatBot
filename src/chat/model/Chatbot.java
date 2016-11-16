@@ -12,6 +12,7 @@ public class Chatbot
 {
 	private ArrayList<String> memesList;
 	private ArrayList<String> politicalTopicsList;
+	private ArrayList<String> greetingsList;
 	private String userName;
 	private String content;
 	private float politicalLevel;
@@ -30,8 +31,10 @@ public class Chatbot
 		this.userName = userName;
 		memesList = new ArrayList<String>();
 		politicalTopicsList = new ArrayList<String>();
+		greetingsList = new ArrayList<String>();
 		buildMemesList();
 		buildPoliticalTopicsList();
+		buildGreetingsList();
 		content = "spicy boi";
 		politicalLevel = 0;
 		memeLevel = 0;
@@ -40,7 +43,14 @@ public class Chatbot
 		rand = new Random();
 		currentTopicProbe = -1;
 	}
-
+	private void buildGreetingsList()
+	{
+		greetingsList.add("hello");
+		greetingsList.add("hi");
+		greetingsList.add("sup");
+		greetingsList.add("whats up");
+		greetingsList.add("hows it going");
+	}
 	private void buildMemesList()
 	{
 		memesList.add("harambe");
@@ -539,5 +549,22 @@ public class Chatbot
 	public int getLastProbe()
 	{
 		return currentTopicProbe;
+	}
+	public boolean isGreeting(String input)
+	{
+		boolean isGreeting = false;
+		for(String currentGreet : greetingsList)
+		{
+			if(input.toLowerCase().contains(currentGreet.toLowerCase()))
+			{
+				isGreeting = true;
+			}
+		}
+		return isGreeting;
+		
+	}
+	public ArrayList<String> getGreetings()
+	{
+		return greetingsList;
 	}
 }
