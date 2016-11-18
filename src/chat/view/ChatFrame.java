@@ -24,7 +24,7 @@ public class ChatFrame extends JFrame
 		super();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.controller = controller;
-		this.panel = new ChatPanel(controller);
+		this.panel = new ChatPanel(controller,this);
 		setup();
 		setupFrameListener();
 	}

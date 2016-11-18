@@ -515,7 +515,6 @@ public class Chatbot
 				}
 
 			}
-
 		} else
 		{
 			int qToAsk = rand.nextInt(3) + 1;

@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import chat.controller.ChatController;
+import java.awt.Component;
 
 public class ChatPanel extends JPanel
 {
@@ -20,19 +21,48 @@ public class ChatPanel extends JPanel
 	private int width;
 	private String Conversation;
 	private String picture;
+	private JScrollPane scrool;
+	JFrame parentFrame;
 
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public ChatPanel(ChatController controller, JFrame parentFrame)
+	{
+		this.parentFrame = parentFrame;
+		this.controller = controller;
+		this.layout = new SpringLayout();
+		this.submitTextButton = new JButton("Enter");
+		layout.putConstraint(SpringLayout.NORTH, submitTextButton, 10, SpringLayout.NORTH, this);
+		layout.putConstraint(SpringLayout.EAST, submitTextButton, -10, SpringLayout.EAST, this);
+		this.scrool = new JScrollPane();
+		this.input = new JTextField();
+		layout.putConstraint(SpringLayout.NORTH, input, -1, SpringLayout.NORTH, submitTextButton);
+		layout.putConstraint(SpringLayout.WEST, input, 10, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.EAST, input, -6, SpringLayout.WEST, submitTextButton);
+		this.pictureDisplay = new JLabel();
+
+		Conversation = "";
+		setupPanel();
+		setupLayout();
+		setupListeners();
+	}
 	public ChatPanel(ChatController controller)
 	{
-
+		parentFrame = new JFrame();
 		this.controller = controller;
 		this.layout = new SpringLayout();
 		this.submitTextButton = new JButton("Enter");
 		this.mainDialog = new JTextArea();
-		layout.putConstraint(SpringLayout.SOUTH, mainDialog, -243, SpringLayout.SOUTH, this);
+		mainDialog.setEditable(false);
+		mainDialog.setEnabled(false);
+		mainDialog.setLineWrap(true);
+		mainDialog.setWrapStyleWord(true);
+		mainDialog.setText(controller.getGreeting()+","+" My Name Is ChatBot");
+		this.scrool = new JScrollPane(mainDialog);
 		this.input = new JTextField();
 		this.pictureDisplay = new JLabel();
-		layout.putConstraint(SpringLayout.NORTH, pictureDisplay, 169, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.SOUTH, pictureDisplay, 0, SpringLayout.SOUTH, this);
+
 		Conversation = "";
 		setupPanel();
 		setupLayout();
@@ -44,27 +74,33 @@ public class ChatPanel extends JPanel
 		this.setLayout(layout);
 		this.add(submitTextButton);
 		this.add(pictureDisplay);
-		this.add(mainDialog);
-		mainDialog.setEditable(false);
+		this.add(scrool);
+		this.add(input);
+		this.mainDialog = new JTextArea();
+		layout.putConstraint(SpringLayout.NORTH, mainDialog, 6, SpringLayout.SOUTH, submitTextButton);
+		layout.putConstraint(SpringLayout.WEST, mainDialog, 10, SpringLayout.WEST, this);
+		layout.putConstraint(SpringLayout.SOUTH, mainDialog, -219, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST, mainDialog, 0, SpringLayout.EAST, submitTextButton);
+		add(mainDialog);
 		mainDialog.setEnabled(false);
+		mainDialog.setEditable(false);
+		mainDialog.setLineWrap(true);
+		mainDialog.setWrapStyleWord(true);
+		mainDialog.setText(controller.getGreeting()+","+" My Name Is ChatBot");
 		mainDialog.setLineWrap(true);
 		mainDialog.setWrapStyleWord(true);
 		mainDialog.setText(controller.getGreeting()+","+" My Name Is ChatBot");
 		
-		this.add(input);
+		
+		
+
+		
 	}
 
 	private void setupLayout()
 	{
 
-		layout.putConstraint(SpringLayout.WEST, input, 39, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, input, -125, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, mainDialog, 37, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.WEST, mainDialog, 39, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.EAST, mainDialog, -66, SpringLayout.EAST, this);
-		layout.putConstraint(SpringLayout.NORTH, input, 3, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.NORTH, submitTextButton, 1, SpringLayout.NORTH, input);
-		layout.putConstraint(SpringLayout.WEST, submitTextButton, 6, SpringLayout.EAST, input);
+		
 	}
 
 	private void setupListeners()
@@ -105,7 +141,9 @@ public class ChatPanel extends JPanel
 	}
 	private void enterButtonClicked(){
 		if(!input.getText().equals("")){
+			Conversation = controller.format(Conversation);
 		Conversation = controller.Chat(input.getText()) + Conversation;
+		
 		input.setText("");
 		mainDialog.setText(Conversation);
 		}
