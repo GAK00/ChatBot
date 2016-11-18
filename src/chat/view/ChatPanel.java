@@ -79,7 +79,7 @@ public class ChatPanel extends JPanel
 		this.mainDialog = new JTextArea();
 		layout.putConstraint(SpringLayout.NORTH, mainDialog, 6, SpringLayout.SOUTH, submitTextButton);
 		layout.putConstraint(SpringLayout.WEST, mainDialog, 10, SpringLayout.WEST, this);
-		layout.putConstraint(SpringLayout.SOUTH, mainDialog, -219, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.SOUTH, mainDialog, -231, SpringLayout.SOUTH, this);
 		layout.putConstraint(SpringLayout.EAST, mainDialog, 0, SpringLayout.EAST, submitTextButton);
 		add(mainDialog);
 		mainDialog.setEnabled(false);
