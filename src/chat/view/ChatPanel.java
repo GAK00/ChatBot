@@ -2,6 +2,7 @@ package chat.view;
 
 
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -44,6 +45,8 @@ public class ChatPanel extends JPanel
 		this.add(submitTextButton);
 		this.add(pictureDisplay);
 		this.add(mainDialog);
+		mainDialog.setDisabledTextColor(Color.BLACK);
+		
 		mainDialog.setEditable(false);
 		mainDialog.setEnabled(false);
 		mainDialog.setLineWrap(true);
@@ -51,6 +54,8 @@ public class ChatPanel extends JPanel
 		mainDialog.setText("Hello My Name Is ChatBot");
 		
 		this.add(input);
+		input.setSelectedTextColor(Color.BLACK);
+		input.setDisabledTextColor(Color.black);
 	}
 
 	private void setupLayout()

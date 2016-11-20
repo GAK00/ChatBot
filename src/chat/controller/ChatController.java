@@ -325,7 +325,7 @@ public class ChatController
 		}
 		if (understoodContent)
 		{
-			checkedInput = checkedInput.substring(35, checkedInput.length());
+			checkedInput = checkedInput.substring(35 + input.length(), checkedInput.length());
 		}
 
 		return checkedInput;
