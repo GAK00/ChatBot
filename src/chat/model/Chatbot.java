@@ -1,6 +1,7 @@
 package chat.model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Base version of the 2015 Chatbot class. Only stub methods are provided.
@@ -11,11 +12,15 @@ public class Chatbot
 {
 	private ArrayList<String> memesList;
 	private ArrayList<String> politicalTopicsList;
+	private ArrayList<String> greetingsList;
 	private String userName;
 	private String content;
 	private float politicalLevel;
 	private float memeLevel;
 	private float techLevel;
+	private boolean yesNo;
+	private Random rand;
+	private int currentTopicProbe;
 
 	/**
 	 * * Creates an instance of the Chatbot with the supplied username. * @param
@@ -26,14 +31,26 @@ public class Chatbot
 		this.userName = userName;
 		memesList = new ArrayList<String>();
 		politicalTopicsList = new ArrayList<String>();
+		greetingsList = new ArrayList<String>();
 		buildMemesList();
 		buildPoliticalTopicsList();
+		buildGreetingsList();
 		content = "spicy boi";
 		politicalLevel = 0;
 		memeLevel = 0;
 		techLevel = 0;
+		yesNo = false;
+		rand = new Random();
+		currentTopicProbe = -1;
 	}
-
+	private void buildGreetingsList()
+	{
+		greetingsList.add("hello");
+		greetingsList.add("hi");
+		greetingsList.add("sup");
+		greetingsList.add("whats up");
+		greetingsList.add("hows it going");
+	}
 	private void buildMemesList()
 	{
 		memesList.add("harambe");
@@ -107,7 +124,7 @@ public class Chatbot
 	public boolean contentChecker(String currentInput)
 	{
 		boolean contentContained = false;
-	
+
 		if (currentInput.toLowerCase().contains(content.toLowerCase()))
 		{
 			contentContained = true;
@@ -127,12 +144,14 @@ public class Chatbot
 	public boolean politicalTopicChecker(String currentInput)
 	{
 		boolean isPolitical = false;
-		for(String topic : politicalTopicsList){
-			if(currentInput.contains(topic)){
+		for (String topic : politicalTopicsList)
+		{
+			if (currentInput.contains(topic))
+			{
 				isPolitical = true;
 			}
 		}
-		
+
 		return isPolitical;
 	}
 
@@ -148,8 +167,10 @@ public class Chatbot
 	{
 		boolean isMeme = false;
 		currentInput = currentInput.toLowerCase();
-		for(String meme: memesList){
-			if(currentInput.toLowerCase().contains(meme.toLowerCase())){
+		for (String meme : memesList)
+		{
+			if (currentInput.toLowerCase().contains(meme.toLowerCase()))
+			{
 				isMeme = true;
 			}
 		}
@@ -288,11 +309,8 @@ public class Chatbot
 		}
 		return quit;
 	}
+
 	
-	public int getEmotion(){
-		int emotionState = 0;
-		return emotionState;
-	}
 
 	public float getMemeLevel()
 	{
@@ -313,10 +331,12 @@ public class Chatbot
 	{
 		this.memeLevel = memeLevel;
 	}
+
 	public void setPoliticalLevel(float politicalLevel)
 	{
 		this.politicalLevel = politicalLevel;
 	}
+
 	public void setTechLevel(float techLevel)
 	{
 		this.techLevel = techLevel;
@@ -332,5 +352,217 @@ public class Chatbot
 		this.content = content;
 		System.out.println(this.content);
 
+	}
+
+	public String generateQuestion(String input)
+	{
+		String question = "";
+
+		if (Float.compare(memeLevel, 10) >= 0 || Float.compare(politicalLevel, 10) >= 0 || Float.compare(techLevel, 10) >= 0)
+		{
+			int qToAsk = rand.nextInt(3) + 1;
+			if (Float.compare(memeLevel, 10) >= 0)
+			{
+				currentTopicProbe = 0;
+				if (qToAsk == 1)
+				{
+					int meme = rand.nextInt(memesList.size());
+					question = "Do you like the " + memesList.get(meme) + " meme";
+
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "Wow you really like memes don't you";
+					yesNo = true;
+				} else if (qToAsk == 3)
+				{
+					question = "What do you like other than memes";
+				}
+			} else if (Float.compare(politicalLevel, 10) >= 0)
+			{
+				currentTopicProbe = 1;
+				if (qToAsk == 1)
+				{
+					int politic = rand.nextInt(politicalTopicsList.size());
+					question = "Do you like the " + politicalTopicsList.get(politic) + " Politcal topic";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "Wow you really like Politics don't you";
+					yesNo = true;
+				} else if (qToAsk == 3)
+				{
+					question = "What do you like other than Politics";
+				}
+			} else if (Float.compare(techLevel, 10) >= 0)
+			{
+				currentTopicProbe = 2;
+				if (qToAsk == 1)
+				{
+					question = "Wow you really like computers don't you";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "How much time do you spend on computer";
+				} else if (qToAsk == 3)
+				{
+					question = "Do you use twitter to much";
+					yesNo = true;
+				}
+			}
+		} else if (Float.compare(memeLevel, 5) >= 0 || Float.compare(politicalLevel, 5) >= 0
+				|| Float.compare(techLevel, 5) >= 0)
+		{
+			int qToAsk = rand.nextInt(3) + 1;
+			if (Float.compare(memeLevel, 5) >= 0)
+			{
+				currentTopicProbe = 0;
+				if (qToAsk == 1)
+				{
+					question = "Memes are great do you agree";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "Wow you talk know a lot of memes, What other do you know";
+				} else if (qToAsk == 3)
+				{
+					question = "Are you a meme lord";
+					yesNo = true;
+				}
+
+			} else if (Float.compare(politicalLevel, 5) >= 0)
+			{
+				currentTopicProbe = 1;
+				if (qToAsk == 1)
+				{
+					question = "Your are really poltically involved aren't you";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "What else do you feel about politics";
+				} else if (qToAsk == 3)
+				{
+					question = "Do you prefer Trump or Hillary";
+				}
+			} else if (Float.compare(techLevel, 5) >= 0)
+			{
+				currentTopicProbe = 2;
+				if (qToAsk == 1)
+				{
+					question = "You spend a fair amount of time on computers don't you";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "What else do you care about relitive to computers";
+				} else if (qToAsk == 3)
+				{
+					question = "Do you tweet regularly";
+					yesNo = true;
+				}
+
+			}
+
+		} else if (Float.compare(memeLevel, 3) >= 0 || Float.compare(politicalLevel, 3) >= 0
+				|| Float.compare(techLevel, 3) >= 0)
+		{
+			int qToAsk = rand.nextInt(3) + 1;
+			if (Float.compare(memeLevel, 3) >= 0)
+			{
+
+				currentTopicProbe = 0;
+				if (qToAsk == 1)
+				{
+					question = "Tell me more about memes";
+				} else if (qToAsk == 2)
+				{
+					question = "Do you dabble in memes";
+					yesNo = true;
+				} else if (qToAsk == 3)
+				{
+					question = "do you meme often";
+					yesNo = true;
+				}
+
+			} else if (Float.compare(politicalLevel, 3) >= 0)
+			{
+				currentTopicProbe = 1;
+				if (qToAsk == 1)
+				{
+					question = "You dabble in politics don't you";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "tell me more about politics";
+				} else if (qToAsk == 3)
+				{
+					question = "Do you think politics are cool";
+					yesNo = true;
+				}
+			} else if (Float.compare(techLevel, 3) >= 0)
+			{
+				currentTopicProbe = 2;
+				if (qToAsk == 1)
+				{
+					question = "You know how to use computers, right";
+					yesNo = true;
+				} else if (qToAsk == 2)
+				{
+					question = "how often do you use computers";
+				} else if (qToAsk == 3)
+				{
+					question = "Do you have a twitter acount";
+					yesNo = true;
+				}
+
+			}
+		} else
+		{
+			int qToAsk = rand.nextInt(3) + 1;
+			if (qToAsk == 1)
+			{
+				currentTopicProbe = 0;
+				question = "Tell me about memes";
+			} else if (qToAsk == 2)
+			{
+				currentTopicProbe = 1;
+				question = "tell me about politics";
+			} else if (qToAsk == 3)
+			{
+				currentTopicProbe = 2;
+				question = "tell me more about tech";
+			}
+
+		}
+		return question;
+	}
+	public boolean retriveYesNo(){
+		boolean toggle = yesNo;
+		yesNo = false;
+		return toggle;
+	}
+	/**
+	 * 0 = meme 1 = politics 2 = tech
+	 * @return last topic chatbot asked a question about
+	 */
+	public int getLastProbe()
+	{
+		return currentTopicProbe;
+	}
+	public boolean isGreeting(String input)
+	{
+		boolean isGreeting = false;
+		for(String currentGreet : greetingsList)
+		{
+			if(input.toLowerCase().contains(currentGreet.toLowerCase()))
+			{
+				isGreeting = true;
+			}
+		}
+		return isGreeting;
+		
+	}
+	public ArrayList<String> getGreetings()
+	{
+		return greetingsList;
 	}
 }

@@ -1,5 +1,4 @@
 package chat.controller;
-
 import chat.view.ChatFrame;
 import chat.model.Chatbot;
 import chat.view.ChatViewer;
@@ -12,11 +11,12 @@ public class ChatController
 	private ChatViewer display;
 	private Random rand;
 	private ChatFrame baseFrame;
-	private boolean yesNo;
-	//0 for memes
-	//1 for politics
-	//2 for tech
-	private int currentTopicProbe = 0;
+	String lastQuestion;
+	String addQuestion;
+
+	// 0 for memes
+	// 1 for politics
+	// 2 for tech
 
 	public ChatController()
 	{
@@ -24,6 +24,9 @@ public class ChatController
 		display = new ChatViewer();
 		rand = new Random();
 		baseFrame = new ChatFrame(this);
+		lastQuestion = "";
+		addQuestion = "";
+
 	}
 
 	public void start()
@@ -41,279 +44,211 @@ public class ChatController
 	public String Chat(String input)
 	{
 		String response = "";
-		response += "You said:\n " + input;
-		if (yesNo)
+		response = "ChatBot Asks: " + stupidBot.generateQuestion(input) + "?\n\n";
+		lastQuestion = response;
+		if (!addQuestion.equals(""))
 		{
-			yesNo = false;
-			if (input.toLowerCase().contains("yes"))
-			{
-				response += "\nCool I am gald you agree\n";
-
-			} else if (input.toLowerCase().contains("no"))
-			{
-				response += "\nOh well it is ok you don't agree\n";
-
-			} else
-			{
-				response += "\nyour answer does not make sense\n";
-			}
-
-		} else
-		{
-			response += "\n"+useChatbotCheckers(input)+ "\n";
+			response += addQuestion;
 		}
-		response += "\n\n"+askQuestions(input)+"\n\n\n\n";
+		response += generateResponse(input);
+		setPicture();
 		return response;
 	}
 
-	private String askQuestions(String input)
+	public String format(String conversation)
 	{
-		String question = "";
-
-		if (Float.compare(stupidBot.getMemeLevel(), 10) >= 0 || Float.compare(stupidBot.getPoliticalLevel(), 10) >= 0
-				|| Float.compare(stupidBot.getTechLevel(), 10) >= 0)
+		if (!lastQuestion.equals(""))
 		{
-			int qToAsk = rand.nextInt(3) + 1;
-			if (Float.compare(stupidBot.getMemeLevel(), 10) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
-				currentTopicProbe = 0;
-				if (qToAsk == 1)
-				{
-					int meme = rand.nextInt(stupidBot.getMemesList().size());
-					question = "Do you like the " + stupidBot.getMemesList().get(meme) + " meme";
-					
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "Wow you really like memes don't you";
-					yesNo = true;
-				} else if (qToAsk == 3)
-				{
-					question = "What do you like other than memes";
-				}
-			} else if (Float.compare(stupidBot.getPoliticalLevel(), 10) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/Politics.png");
-				currentTopicProbe = 1;
-				if (qToAsk == 1)
-				{
-					int politic = rand.nextInt(stupidBot.getPoliticalTopicList().size());
-					question = "Do you like the " + stupidBot.getMemesList().get(politic) + " Politcal topic";
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "Wow you really like Politics don't you";
-					yesNo = true;
-				} else if (qToAsk == 3)
-				{
-					question = "What do you like other than Politics";
-				}
-			} else if (Float.compare(stupidBot.getTechLevel(), 10) >= 0)
-			{
-				currentTopicProbe=2;
-				baseFrame.getPanel().setPicture("images/Internet.png");
-				if (qToAsk == 1)
-				{
-					question = "Wow you really like computers don't you";
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "How much time do you spend on computer";
-				} else if (qToAsk == 3)
-				{
-					question = "Computers Love you too";
-				}
-			}
-		} else if (Float.compare(stupidBot.getMemeLevel(), 5) >= 0 || Float.compare(stupidBot.getPoliticalLevel(), 5) >= 0
-				|| Float.compare(stupidBot.getTechLevel(), 5) >= 0)
-		{
-			int qToAsk = rand.nextInt(3) + 1;
-			if (Float.compare(stupidBot.getMemeLevel(), 5) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
-				if (qToAsk == 1)
-				{
-					question = "Stop talking about Memes!!";
-				} else if (qToAsk == 2)
-				{
-					question = "Wow you talk know a lot of memes, What other do you know";
-				} else if (qToAsk == 3)
-				{
-					question = "Are you a meme lord";
-				}
-
-			} else if (Float.compare(stupidBot.getPoliticalLevel(), 5) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/Politics.png");
-				if (qToAsk == 1)
-				{
-					question = "Your are really poltically involved aren't you";
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "What else do you feel about politics";
-				} else if (qToAsk == 3)
-				{
-					question = "Do you prefer Trump or Hillary";
-				}
-			} else if (Float.compare(stupidBot.getTechLevel(), 5) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/Internet.png");
-				if (qToAsk == 1)
-				{
-					question = "You spend a fair amount of time on computers dont you";
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "What else do you care about relitive to computers";
-				} else if (qToAsk == 3)
-				{
-					question = "Do you tweet regularly";
-					yesNo = true;
-				}
-
-			}
+			conversation = conversation.replaceFirst(lastQuestion.trim(), "");
+			conversation = conversation.substring(1, conversation.length());
+			lastQuestion = lastQuestion.replaceFirst("[\n]{2,}", "\n");
+			lastQuestion = lastQuestion.replaceFirst("ChatBot Asks: ", "ChatBot Asked: ");
+			addQuestion = lastQuestion;
 
 		}
-		else if(Float.compare(stupidBot.getMemeLevel(), 3) >= 0 || Float.compare(stupidBot.getPoliticalLevel(), 3) >= 0
-				|| Float.compare(stupidBot.getTechLevel(), 3) >= 0)
+		return conversation;
+	}
+
+	private void setPicture()
+	{
+		if (stupidBot.getLastProbe() == 0)
 		{
-			int qToAsk = rand.nextInt(3) + 1;
-			if (Float.compare(stupidBot.getMemeLevel(), 3) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
-				if (qToAsk == 1)
-				{
-					question = "Tell me more about memes";
-				} else if (qToAsk == 2)
-				{
-					question = "Do you dabble in memes";
-					yesNo = true;
-				} else if (qToAsk == 3)
-				{
-					question = "do you Meme often";
-						yesNo = true;
-				}
-
-			} else if (Float.compare(stupidBot.getPoliticalLevel(), 3) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/Politics.png");
-				if (qToAsk == 1)
-				{
-					question = "You dabble in politics don't you";
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "tell me more about politics";
-				} else if (qToAsk == 3)
-				{
-					question = "Do you think politics are dumb";
-					yesNo = true;
-				}
-			} else if (Float.compare(stupidBot.getTechLevel(), 3) >= 0)
-			{
-				baseFrame.getPanel().setPicture("images/Internet.png");
-				if (qToAsk == 1)
-				{
-					question = "You know how to use computers, right";
-					yesNo = true;
-				} else if (qToAsk == 2)
-				{
-					question = "how often do you use computers";
-				} else if (qToAsk == 3)
-				{
-					question = "Do you have a twitter acount";
-					yesNo = true;
-				}
-
-			}
-			
+			baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
 		}
-		else{
-			int qToAsk = rand.nextInt(3) + 1;
-			if(qToAsk == 1){
-				baseFrame.getPanel().setPicture("images/doYouLikeMemes.png");
-				question = "Tell me about memes";
-			}
-			else if(qToAsk == 2){
-				baseFrame.getPanel().setPicture("images/Politics.png");
-				question = "tell me about politics";
-			}
-			else if(qToAsk == 3){
-				baseFrame.getPanel().setPicture("images/Internet.png");
-				question = "tell me more about tech";
-			}
-			
+
+		if (stupidBot.getLastProbe() == 1)
+		{
+			baseFrame.getPanel().setPicture("images/Politics.png");
 		}
-		return question;
+
+		if (stupidBot.getLastProbe() == 2)
+		{
+			baseFrame.getPanel().setPicture("images/Internet.png");
+		}
+	}
+
+	private String yesNoCheckers(String input)
+	{
+		String response = "";
+		if (input.toLowerCase().contains("yes"))
+		{
+			if (stupidBot.getLastProbe() == 0 && Float.compare(stupidBot.getMemeLevel(), 10) < 0)
+			{
+				stupidBot.setMemeLevel(stupidBot.getMemeLevel() + 1.5f);
+			}
+			if (stupidBot.getLastProbe() == 1 && Float.compare(stupidBot.getPoliticalLevel(), 10) < 0)
+			{
+				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel() + 1.5f);
+			}
+			if (stupidBot.getLastProbe() == 2 && Float.compare(stupidBot.getTechLevel(), 10) < 0)
+			{
+				stupidBot.setTechLevel(stupidBot.getTechLevel() + 1.5f);
+			}
+			response += "\nCool I am gald you agree\n";
+
+		} else if (input.toLowerCase().contains("no"))
+		{
+			if (stupidBot.getLastProbe() == 0 && Float.compare(stupidBot.getMemeLevel(), 0) > 0)
+			{
+				stupidBot.setMemeLevel(stupidBot.getMemeLevel() - 1.5f);
+			}
+			if (stupidBot.getLastProbe() == 1 && Float.compare(stupidBot.getPoliticalLevel(), 0) > 0)
+			{
+				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel() - 1.5f);
+			}
+			if (stupidBot.getLastProbe() == 2 && Float.compare(stupidBot.getTechLevel(), 0) > 0)
+			{
+				stupidBot.setTechLevel(stupidBot.getTechLevel() - 1.5f);
+			}
+			response += "\nOh well it is ok you don't agree\n";
+
+		} else
+		{
+			response += "\nyour answer does not make sense\n";
+		}
+		return response;
+	}
+
+	private String generateResponse(String input)
+	{
+		String response = "";
+		response += "You said: " + input;
+		if (stupidBot.retriveYesNo())
+		{
+			response += "\n" + "ChatBot Said: " + yesNoCheckers(input);
+
+		} else
+		{
+			response += "\n" + "ChatBot Said: " + useChatbotCheckers(input);
+		}
+
+		return response;
 	}
 
 	private String useChatbotCheckers(String input)
 	{
-		String checkedInput = "I have no idea what you mean about " + input;
+		String unknown =randomUnknownGenerator();
+		String checkedInput =  unknown + input;
 		boolean understoodContent = false;
+		float toAdd = 1;
+		float toSub = .5f;
 		if (stupidBot.quitChecker(input))
 		{
 			System.exit(0);
+		}
+		if (stupidBot.isGreeting(input))
+		{
+			int greeting = rand.nextInt(stupidBot.getGreetings().size());
+			checkedInput += stupidBot.getGreetings().get(greeting) + "\n";
+			understoodContent = true;
 		}
 		if (stupidBot.memeChecker(input))
 		{
 			if (Float.compare(stupidBot.getMemeLevel(), 10) < 0)
 			{
-				stupidBot.setMemeLevel(stupidBot.getMemeLevel() + 1);
+				if (stupidBot.getLastProbe() == 0)
+				{
+					toAdd += .5;
+				}
+				stupidBot.setMemeLevel(stupidBot.getMemeLevel() + toAdd);
+				toAdd = 1;
 			}
 
-			checkedInput += "\nYou like memes :)\n";
+			checkedInput += "You like memes :)\n";
 
 			understoodContent = true;
 		} else
 		{
 			if (Float.compare(stupidBot.getMemeLevel(), 0) > 0)
 			{
-				stupidBot.setMemeLevel(stupidBot.getMemeLevel() - 0.5f);
+				if (stupidBot.getLastProbe() == 1)
+				{
+					toSub += 1;
+				}
+				stupidBot.setMemeLevel(stupidBot.getMemeLevel() - toSub);
+				toSub = .5f;
 			}
 		}
 		if (stupidBot.contentChecker(input))
 		{
-			checkedInput += "\nYou know my secret topic!\n";
+			checkedInput += "You know my secret topic!\n";
 			understoodContent = true;
 		}
 		if (stupidBot.keyboardMashChecker(input))
 		{
-			checkedInput += "\n Mashing is wrong \n";
+			checkedInput += "Mashing is wrong \n";
 			understoodContent = true;
 		}
 		if (stupidBot.politicalTopicChecker(input))
 		{
 			if (Float.compare(stupidBot.getPoliticalLevel(), 10) < 0)
 			{
-				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel() + 1);
+				if (stupidBot.getLastProbe() == 1)
+				{
+					toAdd += .5;
+				}
+				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel() + toAdd);
+				toAdd = 1;
 			}
-			checkedInput += "\n I hate politics \n";
+			checkedInput += "I hate politics \n";
 			understoodContent = true;
 		} else
 		{
 			if (Float.compare(stupidBot.getPoliticalLevel(), 0) > 0)
 			{
-				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel() - 0.5f);
+				if (stupidBot.getLastProbe() == 1)
+				{
+					toSub += 1;
+				}
+				stupidBot.setPoliticalLevel(stupidBot.getPoliticalLevel() - toSub);
+				toSub = 0.5f;
 			}
 		}
 		if (stupidBot.inputHTMLChecker(input))
 		{
 			if (Float.compare(stupidBot.getTechLevel(), 10) < 0)
 			{
+				toAdd = 0.75f;
+				if (stupidBot.getLastProbe() == 2)
+				{
+					toAdd += .75f;
+				}
 
-				stupidBot.setTechLevel(stupidBot.getTechLevel() + 0.75f);
+				stupidBot.setTechLevel(stupidBot.getTechLevel() + toAdd);
+				toAdd = 1;
 			}
-			checkedInput += "\n You know about the HTMLS!!!! \n";
+			checkedInput += "You know about the HTMLS!!!! \n";
 			understoodContent = true;
 		} else
 		{
 			if (Float.compare(stupidBot.getTechLevel(), 0) > 0)
 			{
-
-				stupidBot.setTechLevel(stupidBot.getTechLevel() - 0.5f);
+				if (stupidBot.getLastProbe() == 2)
+				{
+					toSub += 1;
+				}
+				stupidBot.setTechLevel(stupidBot.getTechLevel() - toSub);
+				toSub = 0.5f;
 			}
 		}
 		if (stupidBot.twitterChecker(input))
@@ -321,19 +256,32 @@ public class ChatController
 			if (Float.compare(stupidBot.getTechLevel(), 10) < 0)
 			{
 
-				stupidBot.setTechLevel(stupidBot.getTechLevel() + 0.75f);
+				toAdd = 0.75f;
+				if (stupidBot.getLastProbe() == 2)
+				{
+					toAdd += .75f;
+				}
+
+				stupidBot.setTechLevel(stupidBot.getTechLevel() + toAdd);
+				toAdd = 1;
 			}
-			checkedInput += "\n Was that a tweet ?!?!?!?!?!?!?!?!?!? \n";
+			checkedInput += "Was that a tweet ?!?!?!?!?!?!?!?!?!? \n";
+			understoodContent = true;
 		} else
 		{
 			if (Float.compare(stupidBot.getTechLevel(), 0) > 0)
 			{
-				stupidBot.setTechLevel(stupidBot.getTechLevel() - 0.5f);
+				if (stupidBot.getLastProbe() == 2)
+				{
+					toSub += 1;
+				}
+				stupidBot.setTechLevel(stupidBot.getTechLevel() - toSub);
+				toSub = 0.5f;
 			}
 		}
 		if (understoodContent)
 		{
-			checkedInput = checkedInput.substring(35 + input.length(), checkedInput.length());
+			checkedInput = checkedInput.substring(unknown.length() + input.length(), checkedInput.length());
 		}
 
 		return checkedInput;
@@ -341,7 +289,50 @@ public class ChatController
 
 	public ChatFrame getBaseFrame()
 	{
+
 		return baseFrame;
+
+	}
+
+	public String getGreeting()
+	{
+		int greeting = rand.nextInt(stupidBot.getGreetings().size());
+		return stupidBot.getGreetings().get(greeting);
+	}
+
+	private String randomUnknownGenerator()
+	{
+		int rand = (int) (Math.random() * 7);
+		String topic = "";
+		switch (rand)
+		{
+		case 0:
+			topic = "What is this strange ";
+			break;
+		case 1:
+			topic = "Could you elaborate on ";
+			break;
+		case 2:
+			topic = "i am confused by the concept of ";
+			break;
+		case 3:
+			topic = "Cannont compute ";
+			break;
+		case 4:
+			topic = "error 404 chat response not found for ";
+			break;
+		case 5:
+			topic = "Why do you assume I know about ";
+			break;
+		case 6:
+			topic = "I like cats more than I like ";
+			break;
+		default:
+			topic = "fatal error your computer is now a bomb run!!!!";
+			break;
+
+		}
+		return topic;
 	}
 
 }
