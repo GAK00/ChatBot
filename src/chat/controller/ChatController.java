@@ -1,5 +1,4 @@
 package chat.controller;
-
 import chat.view.ChatFrame;
 import chat.model.Chatbot;
 import chat.view.ChatViewer;
