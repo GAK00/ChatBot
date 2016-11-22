@@ -1,9 +1,10 @@
 package chat.controller;
-import chat.view.ChatFrame;
-import chat.model.Chatbot;
-import chat.view.ChatViewer;
 
 import java.util.Random;
+
+import chat.model.Chatbot;
+import chat.view.ChatFrame;
+import chat.view.ChatViewer;
 
 public class ChatController
 {
@@ -29,6 +30,9 @@ public class ChatController
 
 	}
 
+	/**
+	 * Starts the Program
+	 */
 	public void start()
 	{
 		baseFrame.getPanel().setPicture("images/chatbot.png");
@@ -41,10 +45,17 @@ public class ChatController
 		return stupidBot;
 	}
 
+	/**
+	 * runs the chat bot
+	 * 
+	 * @param input
+	 *            whatever the user inputs
+	 * @return chatbots conversation
+	 */
 	public String Chat(String input)
 	{
 		String response = "";
-		response = "ChatBot Asks: " + stupidBot.generateQuestion(input) + "?\n\n";
+		response = "ChatBot Asks: " + stupidBot.generateQuestion() + "?\n\n";
 		lastQuestion = response;
 		if (!addQuestion.equals(""))
 		{
@@ -55,6 +66,14 @@ public class ChatController
 		return response;
 	}
 
+	/**
+	 * formats the latest chatbot asks into a chatbot asked and put it in the
+	 * correct place
+	 * 
+	 * @param conversation
+	 *            String to format
+	 * @return formated conversation
+	 */
 	public String format(String conversation)
 	{
 		if (!lastQuestion.equals(""))
@@ -69,6 +88,9 @@ public class ChatController
 		return conversation;
 	}
 
+	/**
+	 * sets Chatbots picture based on the content of the last asked question
+	 */
 	private void setPicture()
 	{
 		if (stupidBot.getLastProbe() == 0)
@@ -87,6 +109,13 @@ public class ChatController
 		}
 	}
 
+	/**
+	 * ran if the chatbot is in yesNo question mode
+	 * 
+	 * @param input
+	 *            the users input
+	 * @return chatbots response
+	 */
 	private String yesNoCheckers(String input)
 	{
 		String response = "";
@@ -129,6 +158,13 @@ public class ChatController
 		return response;
 	}
 
+	/**
+	 * Generates chatbots reponse
+	 * 
+	 * @param input
+	 *            users input
+	 * @return the input and chatbots reponse
+	 */
 	private String generateResponse(String input)
 	{
 		String response = "";
@@ -144,16 +180,21 @@ public class ChatController
 
 		return response;
 	}
-
+/**
+ * runs all of chatbots checkers
+ * @param input the users input
+ * @return chatbots reponse
+ */
 	private String useChatbotCheckers(String input)
 	{
-		String unknown =randomUnknownGenerator();
-		String checkedInput =  unknown + input;
+		String unknown = randomUnknownGenerator();
+		String checkedInput = unknown + input;
 		boolean understoodContent = false;
 		float toAdd = 1;
 		float toSub = .5f;
 		if (stupidBot.quitChecker(input))
 		{
+			display.diplayMessage("Thanks for chatting!");
 			System.exit(0);
 		}
 		if (stupidBot.isGreeting(input))
@@ -293,13 +334,19 @@ public class ChatController
 		return baseFrame;
 
 	}
-
+/**
+ * gets a random greeting
+ * @return a random greeting
+ */
 	public String getGreeting()
 	{
 		int greeting = rand.nextInt(stupidBot.getGreetings().size());
 		return stupidBot.getGreetings().get(greeting);
 	}
-
+/**
+ * generates a response to an unknow input
+ * @return a random reponse
+ */
 	private String randomUnknownGenerator()
 	{
 		int rand = (int) (Math.random() * 7);

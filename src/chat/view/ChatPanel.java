@@ -1,14 +1,20 @@
 package chat.view;
 
-import chat.controller.ChatController;
-
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.text.DefaultCaret;
+
+import chat.controller.ChatController;
 
 // Referenced classes of package chat.view:
 //            ChatOptionsFrame
@@ -47,6 +53,9 @@ public class ChatPanel extends JPanel
 		setupListeners();
 	}
 
+	/**
+	 * sets up panel
+	 */
 	private void setupPanel()
 	{
 		setLayout(layout);
@@ -60,13 +69,14 @@ public class ChatPanel extends JPanel
 		mainDialog.setEditable(false);
 		mainDialog.setLineWrap(true);
 		mainDialog.setWrapStyleWord(true);
-		mainDialog.setLineWrap(true);
-		mainDialog.setWrapStyleWord(true);
 		mainDialog.setText((new StringBuilder(String.valueOf(controller.getGreeting()))).append(",").append(" My Name Is ChatBot").toString());
 		DefaultCaret caret = (DefaultCaret) mainDialog.getCaret();
 		caret.setUpdatePolicy(1);
 	}
 
+	/**
+	 * sets up layout
+	 */
 	private void setupLayout()
 	{
 		layout.putConstraint("West", settingsButton, -33, "East", submitTextButton);
@@ -84,6 +94,9 @@ public class ChatPanel extends JPanel
 		layout.putConstraint("East", scrool, 0, "East", submitTextButton);
 	}
 
+	/**
+	 * sets up Listeners
+	 */
 	private void setupListeners()
 	{
 		submitTextButton.addActionListener(new ActionListener()
@@ -110,6 +123,12 @@ public class ChatPanel extends JPanel
 
 	}
 
+	/**
+	 * sets the picture
+	 * 
+	 * @param picture
+	 *            path to picture
+	 */
 	public void setPicture(String picture)
 	{
 		this.picture = picture;
@@ -136,6 +155,9 @@ public class ChatPanel extends JPanel
 		this.width = width;
 	}
 
+	/**
+	 * fired when the enterButton is clicked
+	 */
 	private void enterButtonClicked()
 	{
 		if (!input.getText().equals(""))
@@ -147,85 +169,23 @@ public class ChatPanel extends JPanel
 		}
 	}
 
+	/**
+	 * creates the options menu
+	 */
 	private void createOptionsMenu()
 	{
-		if(currentOptionsPanel == null){
-		currentOptionsPanel = new ChatOptionsFrame(controller, this);}
+		if (currentOptionsPanel == null)
+		{
+			currentOptionsPanel = new ChatOptionsFrame(controller, this);
+		}
 	}
+
+	/**
+	 * ran when ChatOptions is closed
+	 */
 	public void ChatOptionsClosed()
 	{
 		currentOptionsPanel = null;
 	}
-	/*
-	 * 
-	 * private JButton settingsButton; private ChatController controller;
-	 * private JButton submitTextButton; private JTextArea mainDialog; private
-	 * JTextField input; private SpringLayout layout; private JLabel
-	 * pictureDisplay; private int width; private String Conversation; private
-	 * String picture; private JScrollPane scrool; private ChatController
-	 * controller; private JButton submitTextButton; private JTextArea
-	 * mainDialog; private JTextField input; private SpringLayout layout;
-	 * private JLabel pictureDisplay; private int width; private String
-	 * Conversation; private String picture;
-	 * 
-	 * public ChatPanel(ChatController controller) {
-	 * 
-	 * this.controller = controller; this.layout = new SpringLayout();
-	 * this.submitTextButton = new JButton("Enter"); this.mainDialog = new
-	 * JTextArea(); layout.putConstraint(SpringLayout.SOUTH, mainDialog, -243,
-	 * SpringLayout.SOUTH, this); this.input = new JTextField();
-	 * this.pictureDisplay = new JLabel();
-	 * layout.putConstraint(SpringLayout.NORTH, pictureDisplay, 169,
-	 * SpringLayout.NORTH, this); layout.putConstraint(SpringLayout.SOUTH,
-	 * pictureDisplay, 0, SpringLayout.SOUTH, this); Conversation = "";
-	 * setupPanel(); setupLayout(); setupListeners(); }
-	 * 
-	 * private void setupPanel() { this.setLayout(layout);
-	 * this.add(submitTextButton); this.add(pictureDisplay);
-	 * this.add(mainDialog); mainDialog.setDisabledTextColor(Color.BLACK);
-	 * 
-	 * mainDialog.setEditable(false); mainDialog.setEnabled(false);
-	 * mainDialog.setLineWrap(true); mainDialog.setWrapStyleWord(true);
-	 * mainDialog.setText("Hello My Name Is ChatBot");
-	 * 
-	 * this.add(input); input.setSelectedTextColor(Color.BLACK);
-	 * input.setDisabledTextColor(Color.black); }
-	 * 
-	 * private void setupLayout() {
-	 * 
-	 * layout.putConstraint(SpringLayout.WEST, input, 39, SpringLayout.WEST,
-	 * this); layout.putConstraint(SpringLayout.EAST, input, -125,
-	 * SpringLayout.EAST, this); layout.putConstraint(SpringLayout.NORTH,
-	 * mainDialog, 37, SpringLayout.NORTH, this);
-	 * layout.putConstraint(SpringLayout.WEST, mainDialog, 39,
-	 * SpringLayout.WEST, this); layout.putConstraint(SpringLayout.EAST,
-	 * mainDialog, -66, SpringLayout.EAST, this);
-	 * layout.putConstraint(SpringLayout.NORTH, input, 3, SpringLayout.NORTH,
-	 * this); layout.putConstraint(SpringLayout.NORTH, submitTextButton, 1,
-	 * SpringLayout.NORTH, input); layout.putConstraint(SpringLayout.WEST,
-	 * submitTextButton, 6, SpringLayout.EAST, input); }
-	 * 
-	 * private void setupListeners() { submitTextButton.addActionListener(new
-	 * ActionListener() { public void actionPerformed(ActionEvent click) {
-	 * enterButtonClicked(); } }); input.addActionListener(new ActionListener(){
-	 * public void actionPerformed(ActionEvent Enter){ enterButtonClicked(); }}
-	 * ); } public void setPicture(String picture){ this.picture = picture;
-	 * this.remove(pictureDisplay);
-	 * layout.removeLayoutComponent(pictureDisplay); ImageIcon image = new
-	 * ImageIcon(getClass().getResource(picture)); this.pictureDisplay = new
-	 * JLabel(image); layout.putConstraint(SpringLayout.NORTH, pictureDisplay,
-	 * 5, SpringLayout.SOUTH, mainDialog);
-	 * layout.putConstraint(SpringLayout.WEST, pictureDisplay,
-	 * ((width/2)-(image.getIconWidth()/2)), SpringLayout.WEST, this);
-	 * layout.putConstraint(SpringLayout.SOUTH, pictureDisplay, 0,
-	 * SpringLayout.SOUTH, this); this.add(pictureDisplay); } public int
-	 * getMyKnownWith() { return width; } public String getPicture(){ return
-	 * picture; } public void setWidth(int width){ this.width = width; } private
-	 * void enterButtonClicked(){ if(!input.getText().equals("")){ Conversation
-	 * = controller.Chat(input.getText()) + Conversation; input.setText("");
-	 * mainDialog.setText(Conversation); }
-	 * 
-	 * }
-	 */
 
 }

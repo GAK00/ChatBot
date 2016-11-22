@@ -43,6 +43,10 @@ public class Chatbot
 		rand = new Random();
 		currentTopicProbe = -1;
 	}
+
+	/**
+	 * builds the greetings list
+	 */
 	private void buildGreetingsList()
 	{
 		greetingsList.add("hello");
@@ -51,6 +55,10 @@ public class Chatbot
 		greetingsList.add("whats up");
 		greetingsList.add("hows it going");
 	}
+
+	/**
+	 * builds the memesList
+	 */
 	private void buildMemesList()
 	{
 		memesList.add("harambe");
@@ -73,7 +81,9 @@ public class Chatbot
 		memesList.add("dad jokes");
 
 	}
-
+/**
+ * builds the Poltical list
+ */
 	private void buildPoliticalTopicsList()
 	{
 		politicalTopicsList.add("Democrat");
@@ -205,7 +215,11 @@ public class Chatbot
 	{
 		return memesList;
 	}
-
+/**
+ * checks if input is mashing
+ * @param input input to check
+ * @return if the input is mashing
+ */
 	public boolean keyboardMashChecker(String input)
 	{
 		boolean isMashing = true;
@@ -227,11 +241,14 @@ public class Chatbot
 			}
 			boolean isWord = false;
 			if (Input.contains("a") || Input.contains("A") || Input.contains("e") || Input.contains("E") || Input.contains("i")
-					|| Input.contains("I") || Input.contains("o") || Input.contains("O") || Input.contains("u") || Input.contains("U")|| Input.contains("y") || Input.contains("Y"))
+					|| Input.contains("I") || Input.contains("o") || Input.contains("O") || Input.contains("u") || Input.contains("U"))
+			{
+				isWord = true;
+			} else if (Input.contains("y") || Input.contains("Y"))
 			{
 				isWord = true;
 			}
-			if (isAcronym || isWord)
+			if (isAcronym && !(Input.length() >= 40) || isWord && !(Input.length() >= 40))
 			{
 				Passes++;
 			} else
@@ -239,9 +256,9 @@ public class Chatbot
 				Fails++;
 			}
 		}
-		if(Passes>Fails)
+		if (Passes > Fails)
 		{
-			isMashing= false;
+			isMashing = false;
 		}
 		return isMashing;
 	}
@@ -316,8 +333,6 @@ public class Chatbot
 		return quit;
 	}
 
-	
-
 	public float getMemeLevel()
 	{
 		return memeLevel;
@@ -356,11 +371,13 @@ public class Chatbot
 	public void setContent(String content)
 	{
 		this.content = content;
-		System.out.println(this.content);
 
 	}
-
-	public String generateQuestion(String input)
+/**
+ * generates a queston based on chatbots current state
+ * @return a new question
+ */
+	public String generateQuestion()
 	{
 		String question = "";
 
@@ -416,8 +433,7 @@ public class Chatbot
 					yesNo = true;
 				}
 			}
-		} else if (Float.compare(memeLevel, 5) >= 0 || Float.compare(politicalLevel, 5) >= 0
-				|| Float.compare(techLevel, 5) >= 0)
+		} else if (Float.compare(memeLevel, 5) >= 0 || Float.compare(politicalLevel, 5) >= 0 || Float.compare(techLevel, 5) >= 0)
 		{
 			int qToAsk = rand.nextInt(3) + 1;
 			if (Float.compare(memeLevel, 5) >= 0)
@@ -468,8 +484,7 @@ public class Chatbot
 
 			}
 
-		} else if (Float.compare(memeLevel, 3) >= 0 || Float.compare(politicalLevel, 3) >= 0
-				|| Float.compare(techLevel, 3) >= 0)
+		} else if (Float.compare(memeLevel, 3) >= 0 || Float.compare(politicalLevel, 3) >= 0 || Float.compare(techLevel, 3) >= 0)
 		{
 			int qToAsk = rand.nextInt(3) + 1;
 			if (Float.compare(memeLevel, 3) >= 0)
@@ -541,32 +556,43 @@ public class Chatbot
 		}
 		return question;
 	}
-	public boolean retriveYesNo(){
+
+	public boolean retriveYesNo()
+	{
 		boolean toggle = yesNo;
 		yesNo = false;
 		return toggle;
 	}
+
 	/**
-	 * 0 = meme 1 = politics 2 = tech
+	 * 0=meme 1=politics 2=tech
+	 * 
 	 * @return last topic chatbot asked a question about
 	 */
 	public int getLastProbe()
 	{
 		return currentTopicProbe;
 	}
+/**
+ * Checks if somthing is a greeting
+ * @param input String to check 
+ * @return if the input is a greeting
+ */
 	public boolean isGreeting(String input)
 	{
 		boolean isGreeting = false;
-		for(String currentGreet : greetingsList)
+		for (String currentGreet : greetingsList)
 		{
-			if(input.toLowerCase().contains(" " + currentGreet.toLowerCase())||input.toLowerCase().contains(currentGreet.toLowerCase() + " ")||input.toLowerCase().equals(currentGreet))
+			if (input.toLowerCase().contains(" " + currentGreet.toLowerCase()) || input.toLowerCase().contains(currentGreet.toLowerCase() + " ")
+					|| input.toLowerCase().equals(currentGreet))
 			{
 				isGreeting = true;
 			}
 		}
 		return isGreeting;
-		
+
 	}
+
 	public ArrayList<String> getGreetings()
 	{
 		return greetingsList;
