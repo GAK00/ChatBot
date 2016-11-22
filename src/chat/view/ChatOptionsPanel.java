@@ -12,9 +12,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-// Referenced classes of package chat.view:
-//            ChatPanel
-
 public class ChatOptionsPanel extends JPanel
 {
 

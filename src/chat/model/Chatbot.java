@@ -211,6 +211,8 @@ public class Chatbot
 		boolean isMashing = true;
 		String[] strings = input.split(" ");
 		boolean isAcronym = false;
+		int Passes = 0;
+		int Fails = 0;
 		for (String Input : strings)
 		{
 			if (Input.contains("."))
@@ -225,17 +227,21 @@ public class Chatbot
 			}
 			boolean isWord = false;
 			if (Input.contains("a") || Input.contains("A") || Input.contains("e") || Input.contains("E") || Input.contains("i")
-					|| Input.contains("I") || Input.contains("o") || Input.contains("O") || Input.contains("u") || Input.contains("U"))
+					|| Input.contains("I") || Input.contains("o") || Input.contains("O") || Input.contains("u") || Input.contains("U")|| Input.contains("y") || Input.contains("Y"))
 			{
 				isWord = true;
 			}
 			if (isAcronym || isWord)
 			{
-				isMashing = false;
+				Passes++;
 			} else
 			{
-				return true;
+				Fails++;
 			}
+		}
+		if(Passes>Fails)
+		{
+			isMashing= false;
 		}
 		return isMashing;
 	}
@@ -553,7 +559,7 @@ public class Chatbot
 		boolean isGreeting = false;
 		for(String currentGreet : greetingsList)
 		{
-			if(input.toLowerCase().contains(currentGreet.toLowerCase()))
+			if(input.toLowerCase().contains(" " + currentGreet.toLowerCase())||input.toLowerCase().contains(currentGreet.toLowerCase() + " ")||input.toLowerCase().equals(currentGreet))
 			{
 				isGreeting = true;
 			}
