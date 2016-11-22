@@ -2,22 +2,27 @@
 package chat.view;
 
 import chat.controller.ChatController;
+
 import java.awt.*;
+
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 // Referenced classes of package chat.view:
 //            ChatOptionsPanel, ChatPanel
 
 public class ChatOptionsFrame extends JFrame
 {
-
+private ChatPanel parent;
     public ChatOptionsFrame(ChatController controller, ChatPanel parent)
     {
-        setDefaultCloseOperation(2);
         this.controller = controller;
+        this.parent = parent;
         panel = new ChatOptionsPanel(controller, parent);
         setResizable(false);
         setup();
+        setupListeners();
+        
     }
 
     private void setup()
@@ -39,6 +44,22 @@ public class ChatOptionsFrame extends JFrame
     public ChatOptionsPanel getPanel()
     {
         return panel;
+    }
+    private void setupListeners()
+    {
+    	this.addWindowListener(new java.awt.event.WindowAdapter() {
+    	    @Override
+    	    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+    	     
+    	            closing();
+    	        
+    	    }
+    	});
+    }
+    private void closing()
+    {
+    	parent.ChatOptionsClosed();
+    	this.dispose();
     }
 
     private ChatController controller;

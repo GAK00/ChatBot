@@ -15,7 +15,7 @@ import javax.swing.text.DefaultCaret;
 
 public class ChatPanel extends JPanel
 {
-
+	private ChatOptionsFrame currentOptionsPanel;
 	private JButton settingsButton;
 	private ChatController controller;
 	private JButton submitTextButton;
@@ -149,7 +149,12 @@ public class ChatPanel extends JPanel
 
 	private void createOptionsMenu()
 	{
-		new ChatOptionsFrame(controller, this);
+		if(currentOptionsPanel == null){
+		currentOptionsPanel = new ChatOptionsFrame(controller, this);}
+	}
+	public void ChatOptionsClosed()
+	{
+		currentOptionsPanel = null;
 	}
 	/*
 	 * 
