@@ -29,9 +29,11 @@ public class ChatOptionsPanel extends JPanel
 	private int green;
 	private int blue;
 	private ChatPanel parent;
+	private ChatController controller;
 
 	public ChatOptionsPanel(ChatController controller, ChatPanel parent)
 	{
+		this.controller = controller;
 		this.parent = parent;
 		red = parent.getBackground().getRed();
 		green = parent.getBackground().getGreen();
@@ -145,6 +147,7 @@ public class ChatOptionsPanel extends JPanel
 	private void setChatWindowColor()
 	{
 		parent.setBackground(new Color(red, green, blue));
+		controller.saveSettings(new Color(red, green, blue));
 
 	}
 

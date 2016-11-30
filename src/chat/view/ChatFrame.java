@@ -116,6 +116,7 @@ public class ChatFrame extends JFrame
 	{
 		if (display.collectuserOptionWithPicture("are you sure you wish to quit?", "images/chatbot.png") == 0)
 		{
+			controller.isQuitting();
 			display.diplayMessage("Thanks for chatting!");
 			System.exit(0);
 		}

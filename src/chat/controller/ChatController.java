@@ -1,8 +1,13 @@
 package chat.controller;
 
+import java.awt.Color;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Random;
 
 import chat.model.Chatbot;
+import chat.model.FileHandler;
 import chat.view.ChatFrame;
 import chat.view.ChatViewer;
 
@@ -12,8 +17,13 @@ public class ChatController
 	private ChatViewer display;
 	private Random rand;
 	private ChatFrame baseFrame;
+	private boolean inquire = false;
+	private String lastInput;
+	private boolean inquireCycle = false;
 	String lastQuestion;
 	String addQuestion;
+	private FileHandler fileHandler;
+	private boolean yesNo;
 
 	// 0 for memes
 	// 1 for politics
@@ -21,12 +31,22 @@ public class ChatController
 
 	public ChatController()
 	{
-		stupidBot = new Chatbot("wall-e");
+		yesNo = false;
+		fileHandler = new FileHandler();
+		boolean safeToSave = fileHandler.makeDirectory("ChatData");
+		if (!safeToSave)
+		{
+			System.out.println("Error creating directory");
+		}
+		stupidBot = new Chatbot("wall-e", fileHandler, safeToSave);
 		display = new ChatViewer();
 		rand = new Random();
-		baseFrame = new ChatFrame(this);
+		
+
 		lastQuestion = "";
 		addQuestion = "";
+		lastInput = "";
+
 
 	}
 
@@ -35,7 +55,29 @@ public class ChatController
 	 */
 	public void start()
 	{
-		baseFrame.getPanel().setPicture("images/chatbot.png");
+		if (!fileHandler.getIsLocked())
+		{
+			baseFrame = new ChatFrame(this);
+			try
+			{
+				baseFrame.getPanel().setBackground(getSavedColor());
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			try
+			{
+				baseFrame.getPanel().setConversation(getSavedConversation());
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			fileHandler.lock();
+			baseFrame.getPanel().setPicture("images/chatbot.png");
+		} else
+		{
+			display.displayUserTextWithPics("you can only have one chatBot open in this memory space at one time", "images/chatbot.png");
+		}
 
 	}
 
@@ -54,15 +96,43 @@ public class ChatController
 	 */
 	public String Chat(String input)
 	{
+
+		useChatbotCheckers(input);
+		if (yesNo)
+		{
+			inquire = false;
+		}
 		String response = "";
-		response = "ChatBot Asks: " + stupidBot.generateQuestion() + "?\n\n";
+		String question = stupidBot.generateQuestion();
+
+		if (inquire && !inquireCycle)
+		{
+			inquireCycle = true;
+			inquire = false;
+			question = ("is " + input + " a meme, politics, a greeting, or none of the above");
+		} else
+		{
+			inquireCycle = false;
+		}
+		response = "ChatBot Asks: " + question + "?\n\n";
 		lastQuestion = response;
 		if (!addQuestion.equals(""))
 		{
 			response += addQuestion;
 		}
-		response += generateResponse(input);
+
 		setPicture();
+		response += generateResponse(input);
+		if (!inquireCycle)
+		{
+			yesNo = stupidBot.retriveYesNo();
+		} else
+		{
+			yesNo = false;
+		}
+
+		lastInput = input;
+
 		return response;
 	}
 
@@ -169,22 +239,52 @@ public class ChatController
 	{
 		String response = "";
 		response += "You said: " + input;
-		if (stupidBot.retriveYesNo())
+		if (yesNo)
 		{
-			response += "\n" + "ChatBot Said: " + yesNoCheckers(input);
 
+			response += "\n" + "ChatBot Said: " + yesNoCheckers(input);
+			return response;
+
+		} else if (inquire)
+		{
+			String endAdder = Inquire(input);
+			response += "\n" + "ChatBot Said: " + endAdder;
+			inquire = false;
+			return response;
 		} else
 		{
 			response += "\n" + "ChatBot Said: " + useChatbotCheckers(input);
+			return response;
 		}
 
+	}
+
+	private String Inquire(String input)
+	{
+		String response = "I will rember that";
+		if (input.toLowerCase().contains("greeting"))
+		{
+			stupidBot.updateVocabulary(2, lastInput);
+		} else if (input.toLowerCase().contains("meme"))
+		{
+			stupidBot.updateVocabulary(0, lastInput);
+		} else if (input.toLowerCase().contains("politic"))
+		{
+			stupidBot.updateVocabulary(1, lastInput);
+		} else
+		{
+			response = "I do not know that catogorie";
+		}
 		return response;
 	}
-/**
- * runs all of chatbots checkers
- * @param input the users input
- * @return chatbots reponse
- */
+
+	/**
+	 * runs all of chatbots checkers
+	 * 
+	 * @param input
+	 *            the users input
+	 * @return chatbots reponse
+	 */
 	private String useChatbotCheckers(String input)
 	{
 		String unknown = randomUnknownGenerator();
@@ -194,6 +294,7 @@ public class ChatController
 		float toSub = .5f;
 		if (stupidBot.quitChecker(input))
 		{
+			stupidBot.saveForShutdown();
 			display.diplayMessage("Thanks for chatting!");
 			System.exit(0);
 		}
@@ -323,6 +424,12 @@ public class ChatController
 		if (understoodContent)
 		{
 			checkedInput = checkedInput.substring(unknown.length() + input.length(), checkedInput.length());
+		} else
+		{
+			if (rand.nextInt() % 2 == 0)
+			{
+				inquire = true;
+			}
 		}
 
 		return checkedInput;
@@ -334,19 +441,23 @@ public class ChatController
 		return baseFrame;
 
 	}
-/**
- * gets a random greeting
- * @return a random greeting
- */
+
+	/**
+	 * gets a random greeting
+	 * 
+	 * @return a random greeting
+	 */
 	public String getGreeting()
 	{
 		int greeting = rand.nextInt(stupidBot.getGreetings().size());
 		return stupidBot.getGreetings().get(greeting);
 	}
-/**
- * generates a response to an unknow input
- * @return a random reponse
- */
+
+	/**
+	 * generates a response to an unknow input
+	 * 
+	 * @return a random reponse
+	 */
 	private String randomUnknownGenerator()
 	{
 		int rand = (int) (Math.random() * 7);
@@ -380,6 +491,41 @@ public class ChatController
 
 		}
 		return topic;
+	}
+
+	public void isQuitting()
+	{
+		stupidBot.saveForShutdown();
+		fileHandler.unlock();
+		fileHandler.setFileData(baseFrame.getPanel().getConversation().getBytes(), "Conversation.txt");
+
+	}
+
+	public void saveSettings(Color color)
+	{
+		String hex = Integer.toHexString(color.getRGB());
+
+		fileHandler.setFileData(hex.getBytes(), "Settings.txt");
+
+	}
+
+	private Color getSavedColor()
+	{
+		Color savedColor = Color.white;
+		if (fileHandler.getData("Settings.txt") != null)
+		{
+			String hex = ("#" + (fileHandler.getData("Settings.txt").get(0).substring(2)));
+			savedColor = Color.decode(hex);
+		}
+		return savedColor;
+	}
+
+	private String getSavedConversation()
+	{
+		String Conversation = "";
+		Conversation = fileHandler.getRawData("Conversation.txt");
+		return Conversation;
+
 	}
 
 }

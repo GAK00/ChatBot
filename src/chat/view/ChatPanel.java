@@ -187,5 +187,13 @@ public class ChatPanel extends JPanel
 	{
 		currentOptionsPanel = null;
 	}
+	public String getConversation()
+	{
+		return Conversation;
+	}
+	public void setConversation(String Conversation)
+	{
+		this.Conversation = Conversation;
+	}
 
 }

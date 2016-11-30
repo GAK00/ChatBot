@@ -10,6 +10,9 @@ import java.util.Random;
  */
 public class Chatbot
 {
+	private ArrayList<String> baseMemesList;
+	private ArrayList<String> basePoliticalTopicsList;
+	private ArrayList<String> baseGreetingsList;
 	private ArrayList<String> memesList;
 	private ArrayList<String> politicalTopicsList;
 	private ArrayList<String> greetingsList;
@@ -21,6 +24,8 @@ public class Chatbot
 	private boolean yesNo;
 	private Random rand;
 	private int currentTopicProbe;
+	private FileHandler fileHandler;
+	private boolean safeToSave;
 
 	/**
 	 * * Creates an instance of the Chatbot with the supplied username. * @param
@@ -28,10 +33,19 @@ public class Chatbot
 	 */
 	public Chatbot(String userName)
 	{
+		fileHandler = new FileHandler();
+		safeToSave = fileHandler.makeDirectory("ChatVocab");
+		if (!safeToSave)
+		{
+			System.out.println("Error creating directory");
+		}
 		this.userName = userName;
 		memesList = new ArrayList<String>();
 		politicalTopicsList = new ArrayList<String>();
 		greetingsList = new ArrayList<String>();
+		baseMemesList = new ArrayList<String>();
+		basePoliticalTopicsList = new ArrayList<String>();
+		baseGreetingsList = new ArrayList<String>();
 		buildMemesList();
 		buildPoliticalTopicsList();
 		buildGreetingsList();
@@ -42,6 +56,33 @@ public class Chatbot
 		yesNo = false;
 		rand = new Random();
 		currentTopicProbe = -1;
+		setLevels();
+
+	}
+
+	public Chatbot(String userName, FileHandler fileHandler, boolean safeToSave)
+	{
+		this.fileHandler = fileHandler;
+		this.safeToSave = safeToSave;
+		this.userName = userName;
+		memesList = new ArrayList<String>();
+		politicalTopicsList = new ArrayList<String>();
+		greetingsList = new ArrayList<String>();
+		baseMemesList = new ArrayList<String>();
+		basePoliticalTopicsList = new ArrayList<String>();
+		baseGreetingsList = new ArrayList<String>();
+		buildMemesList();
+		buildPoliticalTopicsList();
+		buildGreetingsList();
+		content = "spicy boi";
+		politicalLevel = 0;
+		memeLevel = 0;
+		techLevel = 0;
+		yesNo = false;
+		rand = new Random();
+		currentTopicProbe = -1;
+		setLevels();
+
 	}
 
 	/**
@@ -54,6 +95,27 @@ public class Chatbot
 		greetingsList.add("sup");
 		greetingsList.add("whats up");
 		greetingsList.add("hows it going");
+		ArrayList<String> greetings = fileHandler.getData("greeting.txt");
+		if (greetings != null)
+		{
+			for (String greeting : greetings)
+			{
+				greetingsList.add(greeting);
+			}
+		}
+		baseGreetingsList.add("hello");
+		baseGreetingsList.add("hi");
+		baseGreetingsList.add("sup");
+		baseGreetingsList.add("whats up");
+		baseGreetingsList.add("hows it going");
+		if (greetings != null)
+		{
+			for (String greeting : greetings)
+			{
+				baseGreetingsList.add(greeting);
+			}
+		}
+
 	}
 
 	/**
@@ -79,11 +141,45 @@ public class Chatbot
 		memesList.add("puns");
 		memesList.add("bad puns");
 		memesList.add("dad jokes");
+		ArrayList<String> memes = fileHandler.getData("memes.txt");
+		if (memes != null)
+		{
+			for (String meme : memes)
+			{
+				memesList.add(meme);
+			}
+		}
+		baseMemesList.add("harambe");
+		baseMemesList.add("doge");
+		baseMemesList.add("cute animals");
+		baseMemesList.add("catz");
+		baseMemesList.add("grumpy cat");
+		baseMemesList.add("dat boi");
+		baseMemesList.add("willy wonka");
+		baseMemesList.add("john cena");
+		baseMemesList.add("pepe");
+		baseMemesList.add("rare pepe");
+		baseMemesList.add("shreckt");
+		baseMemesList.add("dank");
+		baseMemesList.add("get a job");
+		baseMemesList.add("sanic");
+		baseMemesList.add("420");
+		baseMemesList.add("puns");
+		baseMemesList.add("bad puns");
+		baseMemesList.add("dad jokes");
+		if (memes != null)
+		{
+			for (String meme : memes)
+			{
+				baseMemesList.add(meme);
+			}
+		}
 
 	}
-/**
- * builds the Poltical list
- */
+
+	/**
+	 * builds the Poltical list
+	 */
 	private void buildPoliticalTopicsList()
 	{
 		politicalTopicsList.add("Democrat");
@@ -105,13 +201,139 @@ public class Chatbot
 		politicalTopicsList.add("War");
 		politicalTopicsList.add("Economy");
 		politicalTopicsList.add("election");
+		ArrayList<String> politics = fileHandler.getData("politics.txt");
+		if (politics != null)
+		{
+			for (String politic : politics)
+			{
+				politicalTopicsList.add(politic);
+			}
+		}
+		basePoliticalTopicsList.add("Democrat");
+		basePoliticalTopicsList.add("Republican");
+		basePoliticalTopicsList.add("11/8/16");
+		basePoliticalTopicsList.add("conservative");
+		basePoliticalTopicsList.add("Clinton");
+		basePoliticalTopicsList.add("Trump");
+		basePoliticalTopicsList.add("Kaine");
+		basePoliticalTopicsList.add("Pence");
+		basePoliticalTopicsList.add("Stein");
+		basePoliticalTopicsList.add("Johnson");
+		basePoliticalTopicsList.add("liberal");
+		basePoliticalTopicsList.add("Congress");
+		basePoliticalTopicsList.add("President");
+		basePoliticalTopicsList.add("Judge");
+		basePoliticalTopicsList.add("Court");
+		basePoliticalTopicsList.add("Hillary");
+		basePoliticalTopicsList.add("War");
+		basePoliticalTopicsList.add("Economy");
+		basePoliticalTopicsList.add("election");
+		if (politics != null)
+		{
+			for (String politic : politics)
+			{
+				basePoliticalTopicsList.add(politic);
+			}
+		}
+	}
 
+	/**
+	 * Udates chatbots vocab 0 = meme 1 = politic 2 = greeting
+	 * 
+	 * @param updateCatogory
+	 *            list to update
+	 * @param newWord
+	 *            new vocab
+	 */
+	public void updateVocabulary(int updateCatogory, String newWord)
+	{
+		switch (updateCatogory)
+		{
+		case 0:
+			memesList.add(newWord);
+			break;
+		case 1:
+			politicalTopicsList.add(newWord);
+			break;
+		case 2:
+			greetingsList.add(newWord);
+			break;
+		default:
+			System.out.println("error");
+		}
+	}
+
+	public void saveForShutdown()
+	{
+		if (safeToSave)
+		{
+			boolean firstComplete = false;
+			for (String meme : memesList)
+			{
+				if (!baseMemesList.contains(meme))
+				{
+					if (firstComplete)
+					{
+						fileHandler.createFile(("\n" + meme).getBytes(), "memes.txt");
+					} else
+					{
+						fileHandler.createFile((meme).getBytes(), "memes.txt");
+						firstComplete = true;
+					}
+				}
+			}
+			firstComplete = false;
+			for (String politics : politicalTopicsList)
+			{
+				if (!basePoliticalTopicsList.contains(politics))
+				{
+					if (firstComplete)
+					{
+						fileHandler.createFile(("\n" + politics).getBytes(), "politics.txt");
+					} else
+					{
+						fileHandler.createFile((politics).getBytes(), "politics.txt");
+						firstComplete = true;
+					}
+				}
+			}
+			firstComplete = false;
+			for (String greeting : greetingsList)
+			{
+				if (!baseGreetingsList.contains(greeting))
+				{
+					if (firstComplete)
+					{
+						fileHandler.createFile(("\n" + greeting).getBytes(), "greeting.txt");
+					} else
+					{
+						fileHandler.createFile((greeting).getBytes(), "greeting.txt");
+						firstComplete = true;
+					}
+				}
+			}
+		}
+
+		fileHandler.setFileData((Float.toString(memeLevel) + "\n" + Float.toString(politicalLevel) + "\n" + Float.toString(techLevel)).getBytes(),
+				"TopicLevels.txt");
+	}
+
+	private void setLevels()
+	{
+		if (fileHandler.getData("TopicLevels.txt") != null)
+		{
+
+			memeLevel = Float.parseFloat(fileHandler.getData("TopicLevels.txt").get(0));
+			politicalLevel = Float.parseFloat(fileHandler.getData("TopicLevels.txt").get(1));
+			techLevel = Float.parseFloat(fileHandler.getData("TopicLevels.txt").get(2));
+
+		}
 	}
 
 	/**
 	 * * Checks the length of the supplied string. Returns false if the supplied
-	 * String is empty or null, otherwise returns true. * @param currentInput * @return
-	 * A true or false based on the length of the supplied String.
+	 * String is empty or null, otherwise returns true. * @param currentInput
+	 * * @return A true or false based on the length of the supplied String.
 	 */
 	public boolean lengthChecker(String currentInput)
 	{
@@ -203,7 +425,6 @@ public class Chatbot
 	 */
 	public String getContent()
 	{
-		System.out.println(content);
 		return content;
 	}
 
@@ -215,11 +436,14 @@ public class Chatbot
 	{
 		return memesList;
 	}
-/**
- * checks if input is mashing
- * @param input input to check
- * @return if the input is mashing
- */
+
+	/**
+	 * checks if input is mashing
+	 * 
+	 * @param input
+	 *            input to check
+	 * @return if the input is mashing
+	 */
 	public boolean keyboardMashChecker(String input)
 	{
 		boolean isMashing = true;
@@ -240,8 +464,8 @@ public class Chatbot
 				}
 			}
 			boolean isWord = false;
-			if (Input.contains("a") || Input.contains("A") || Input.contains("e") || Input.contains("E") || Input.contains("i")
-					|| Input.contains("I") || Input.contains("o") || Input.contains("O") || Input.contains("u") || Input.contains("U"))
+			if (Input.contains("a") || Input.contains("A") || Input.contains("e") || Input.contains("E") || Input.contains("i") || Input.contains("I")
+					|| Input.contains("o") || Input.contains("O") || Input.contains("u") || Input.contains("U"))
 			{
 				isWord = true;
 			} else if (Input.contains("y") || Input.contains("Y"))
@@ -373,10 +597,12 @@ public class Chatbot
 		this.content = content;
 
 	}
-/**
- * generates a queston based on chatbots current state
- * @return a new question
- */
+
+	/**
+	 * generates a queston based on chatbots current state
+	 * 
+	 * @return a new question
+	 */
 	public String generateQuestion()
 	{
 		String question = "";
@@ -550,7 +776,7 @@ public class Chatbot
 			} else if (qToAsk == 3)
 			{
 				currentTopicProbe = 2;
-				question = "tell me more about tech";
+				question = "tell me  about tech";
 			}
 
 		}
@@ -573,18 +799,21 @@ public class Chatbot
 	{
 		return currentTopicProbe;
 	}
-/**
- * Checks if somthing is a greeting
- * @param input String to check 
- * @return if the input is a greeting
- */
+
+	/**
+	 * Checks if somthing is a greeting
+	 * 
+	 * @param input
+	 *            String to check
+	 * @return if the input is a greeting
+	 */
 	public boolean isGreeting(String input)
 	{
 		boolean isGreeting = false;
 		for (String currentGreet : greetingsList)
 		{
 			if (input.toLowerCase().contains(" " + currentGreet.toLowerCase()) || input.toLowerCase().contains(currentGreet.toLowerCase() + " ")
-					|| input.toLowerCase().equals(currentGreet))
+					|| input.toLowerCase().equals(currentGreet.toLowerCase()))
 			{
 				isGreeting = true;
 			}
