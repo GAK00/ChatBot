@@ -41,12 +41,10 @@ public class ChatController
 		stupidBot = new Chatbot("wall-e", fileHandler, safeToSave);
 		display = new ChatViewer();
 		rand = new Random();
-		
 
 		lastQuestion = "";
 		addQuestion = "";
 		lastInput = "";
-
 
 	}
 
@@ -526,6 +524,12 @@ public class ChatController
 		Conversation = fileHandler.getRawData("Conversation.txt");
 		return Conversation;
 
+	}
+
+	public void handleErrors(Exception currentException)
+	{
+		display.diplayMessage("An error has occured. Details provieded next.");
+		display.diplayMessage(currentException.getMessage());
 	}
 
 }

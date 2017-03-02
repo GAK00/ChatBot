@@ -30,9 +30,14 @@ public class ChatOptionsPanel extends JPanel
 	private int blue;
 	private ChatPanel parent;
 	private ChatController controller;
+	private JButton searchTwitter;
+	private JButton sendTweet;
+	private JButton save;
+	private JButton load;
 
 	public ChatOptionsPanel(ChatController controller, ChatPanel parent)
 	{
+		super();
 		this.controller = controller;
 		this.parent = parent;
 		red = parent.getBackground().getRed();
@@ -49,6 +54,18 @@ public class ChatOptionsPanel extends JPanel
 		setColor.setOpaque(true);
 		setColor.setBorder(new LineBorder(Color.BLACK));
 		setColor.setBackground(new Color(red, green, blue));
+		this.searchTwitter = new JButton("Search Twitter");
+		layout.putConstraint(SpringLayout.NORTH, searchTwitter, 28, SpringLayout.SOUTH, blueSlider);
+		layout.putConstraint(SpringLayout.WEST, searchTwitter, 0, SpringLayout.WEST, redSlider);
+		this.sendTweet = new JButton("Send Tweet");
+		layout.putConstraint(SpringLayout.NORTH, sendTweet, 0, SpringLayout.NORTH, searchTwitter);
+		layout.putConstraint(SpringLayout.EAST, sendTweet, -10, SpringLayout.EAST, this);
+		this.save = new JButton("Save");
+		layout.putConstraint(SpringLayout.SOUTH, save, -10, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST, save, 0, SpringLayout.EAST, sendTweet);
+		this.load = new JButton("Load");
+		layout.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.NORTH, save);
+		layout.putConstraint(SpringLayout.EAST, load, -6, SpringLayout.WEST, save);
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -67,6 +84,10 @@ public class ChatOptionsPanel extends JPanel
 		add(redLabel);
 		add(greenLabel);
 		add(blueLabel);
+		add(searchTwitter);
+		add(sendTweet);
+		add(save);
+		add(load);
 	}
 
 	/**

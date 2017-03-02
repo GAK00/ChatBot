@@ -1,3 +1,244 @@
+ChatBot Asks: Wow you really like memes don't you?
+
+ChatBot Asked: Wow you talk know a lot of memes, What other do you know?
+You said: meme
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: Memes are great do you agree?
+You said: emme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: emem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: eme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: What do you like other than memes?
+You said: memem
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: Do you like the kermit meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: memem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: What do you like other than memes?
+You said: meme
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the pepe meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the kermit meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the john cena meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: What do you like other than memes?
+You said: meme
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: What do you like other than memes?
+You said: memem
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: What do you like other than memes?
+You said: memem
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: Do you like the pepe meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: memem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the pepe meme?
+You said: memem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the dank meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the shreckt meme?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: memem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Wow you really like memes don't you?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the cute animals meme?
+You said: memem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Do you like the john cena meme?
+You said: memem
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Are you a meme lord?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Are you a meme lord?
+You said: meme
+ChatBot Said: 
+your answer does not make sense
+
+
+ChatBot Asked: Tell me more about memes?
+You said: memem
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: tell me about politics?
+You said: memem
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: tell me about politics?
+You said: meme
+ChatBot Said: You like memes :)
+
+
+ChatBot Asked: is meme a meme, politics, a greeting, or none of the above?
+You said: meme
+ChatBot Said: I will rember that
+
+ChatBot Asked: Tell me about memes?
+You said: meme
+ChatBot Said: Could you elaborate on meme
+
+ChatBot Asked: is putin a meme, politics, a greeting, or none of the above?
+You said: meme
+ChatBot Said: Cannont compute meme
+
+ChatBot Asked: tell me  about tech?
+You said: putin
+ChatBot Said: I like cats more than I like putin
+
+ChatBot Asked: Tell me about memes?
+You said: putin
+ChatBot Said: What is this strange putin
+
+You said: hello
+ChatBot Said: jazz hands
+ChatBot Asks: tell me  about tech?
+
+You said: hello
+ChatBot Said: sup
 ChatBot Asks: Tell me about memes?
 
 ChatBot Asked: is jazz hands a meme, politics, a greeting, or none of the above?
