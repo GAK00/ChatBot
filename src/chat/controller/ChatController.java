@@ -1,13 +1,16 @@
 package chat.controller;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
 import chat.model.Chatbot;
-import chat.model.FileHandler;
+import chat.model.FileController;
 import chat.view.ChatFrame;
 import chat.view.ChatViewer;
 
@@ -22,7 +25,7 @@ public class ChatController
 	private boolean inquireCycle = false;
 	String lastQuestion;
 	String addQuestion;
-	private FileHandler fileHandler;
+	private FileController fileHandler;
 	private boolean yesNo;
 
 	// 0 for memes
@@ -31,8 +34,15 @@ public class ChatController
 
 	public ChatController()
 	{
+		Runtime.getRuntime().addShutdownHook(new Thread()
+		{
+			public void run()
+			{
+				isQuitting();
+			}
+		});
 		yesNo = false;
-		fileHandler = new FileHandler();
+		fileHandler = new FileController();
 		boolean safeToSave = fileHandler.makeDirectory("ChatData");
 		if (!safeToSave)
 		{

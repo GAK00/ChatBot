@@ -24,7 +24,7 @@ public class Chatbot
 	private boolean yesNo;
 	private Random rand;
 	private int currentTopicProbe;
-	private FileHandler fileHandler;
+	private FileController fileHandler;
 	private boolean safeToSave;
 
 	/**
@@ -33,7 +33,7 @@ public class Chatbot
 	 */
 	public Chatbot(String userName)
 	{
-		fileHandler = new FileHandler();
+		fileHandler = new FileController();
 		safeToSave = fileHandler.makeDirectory("ChatVocab");
 		if (!safeToSave)
 		{
@@ -60,7 +60,7 @@ public class Chatbot
 
 	}
 
-	public Chatbot(String userName, FileHandler fileHandler, boolean safeToSave)
+	public Chatbot(String userName, FileController fileHandler, boolean safeToSave)
 	{
 		this.fileHandler = fileHandler;
 		this.safeToSave = safeToSave;

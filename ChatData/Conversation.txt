@@ -1,3 +1,71 @@
+ChatBot Asks: Memes are great do you agree?
+
+ChatBot Asked: is bad advice duck a meme, politics, a greeting, or none of the above?
+You said: meme
+ChatBot Said: I will rember that
+
+ChatBot Asked: Wow you talk know a lot of memes, What other do you know?
+You said: bad advice duck
+ChatBot Said: i am confused by the concept of bad advice duck
+
+ChatBot Asked: Are you a meme lord?
+You said: yes
+ChatBot Said: 
+Cool I am gald you agree
+
+
+ChatBot Asked: Are you a meme lord?
+You said: yes
+ChatBot Said: 
+Cool I am gald you agree
+
+
+ChatBot Asked: Memes are great do you agree?
+You said: yes
+ChatBot Said: 
+Cool I am gald you agree
+
+
+ChatBot Asked: Memes are great do you agree?
+You said: yes
+ChatBot Said: 
+Cool I am gald you agree
+
+
+ChatBot Asked: Wow you talk know a lot of memes, What other do you know?
+You said: bad advice duck
+ChatBot Said: i am confused by the concept of bad advice duck
+
+ChatBot Asked: Are you a meme lord?
+You said: yes
+ChatBot Said: 
+Cool I am gald you agree
+
+
+ChatBot Asked: Are you a meme lord?
+You said: yes
+ChatBot Said: 
+Cool I am gald you agree
+
+
+ChatBot Asked: Memes are great do you agree?
+You said: no
+ChatBot Said: 
+Oh well it is ok you don't agree
+
+
+ChatBot Asked: Are you a meme lord?
+You said: hi
+ChatBot Said: 
+your answer does not make sense
+
+
+You said: hello
+ChatBot Said: hows it going
+ChatBot Asks: Wow you really like memes don't you?
+
+You said: hello
+ChatBot Said: whats up
 ChatBot Asks: Wow you really like memes don't you?
 
 ChatBot Asked: Wow you talk know a lot of memes, What other do you know?

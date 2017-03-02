@@ -43,6 +43,8 @@ public class ChatPanel extends JPanel
 		submitTextButton = new JButton("Enter");
 		mainDialog = new JTextArea();
 		scrool = new JScrollPane(mainDialog);
+		scrool.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrool.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		input = new JTextField();
 		Conversation = "";
 		input.setDisabledTextColor(Color.BLACK);
@@ -52,6 +54,8 @@ public class ChatPanel extends JPanel
 		setupLayout();
 		setupListeners();
 	}
+
+
 
 	/**
 	 * sets up panel
@@ -164,6 +168,7 @@ public class ChatPanel extends JPanel
 		{
 			Conversation = controller.format(Conversation);
 			Conversation = (new StringBuilder(String.valueOf(controller.Chat(input.getText())))).append(Conversation).toString();
+			mainDialog.setCaretPosition(mainDialog.getCaretPosition());
 			input.setText("");
 			mainDialog.setText(Conversation);
 		}
@@ -187,10 +192,12 @@ public class ChatPanel extends JPanel
 	{
 		currentOptionsPanel = null;
 	}
+
 	public String getConversation()
 	{
 		return Conversation;
 	}
+
 	public void setConversation(String Conversation)
 	{
 		this.Conversation = Conversation;

@@ -3,9 +3,16 @@ package chat.view;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SpringLayout;
@@ -14,6 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import chat.controller.ChatController;
+import chat.model.FileController;
 
 public class ChatOptionsPanel extends JPanel
 {
@@ -55,17 +63,9 @@ public class ChatOptionsPanel extends JPanel
 		setColor.setBorder(new LineBorder(Color.BLACK));
 		setColor.setBackground(new Color(red, green, blue));
 		this.searchTwitter = new JButton("Search Twitter");
-		layout.putConstraint(SpringLayout.NORTH, searchTwitter, 28, SpringLayout.SOUTH, blueSlider);
-		layout.putConstraint(SpringLayout.WEST, searchTwitter, 0, SpringLayout.WEST, redSlider);
 		this.sendTweet = new JButton("Send Tweet");
-		layout.putConstraint(SpringLayout.NORTH, sendTweet, 0, SpringLayout.NORTH, searchTwitter);
-		layout.putConstraint(SpringLayout.EAST, sendTweet, -10, SpringLayout.EAST, this);
 		this.save = new JButton("Save");
-		layout.putConstraint(SpringLayout.SOUTH, save, -10, SpringLayout.SOUTH, this);
-		layout.putConstraint(SpringLayout.EAST, save, 0, SpringLayout.EAST, sendTweet);
 		this.load = new JButton("Load");
-		layout.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.NORTH, save);
-		layout.putConstraint(SpringLayout.EAST, load, -6, SpringLayout.WEST, save);
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -111,6 +111,14 @@ public class ChatOptionsPanel extends JPanel
 		layout.putConstraint("North", greenSlider, 21, "North", setColor);
 		layout.putConstraint("West", setColor, 203, "East", greenLabel);
 		layout.putConstraint("East", setColor, -118, "East", this);
+		layout.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.NORTH, save);
+		layout.putConstraint(SpringLayout.EAST, load, -6, SpringLayout.WEST, save);
+		layout.putConstraint(SpringLayout.SOUTH, save, -10, SpringLayout.SOUTH, this);
+		layout.putConstraint(SpringLayout.EAST, save, 0, SpringLayout.EAST, sendTweet);
+		layout.putConstraint(SpringLayout.NORTH, sendTweet, 0, SpringLayout.NORTH, searchTwitter);
+		layout.putConstraint(SpringLayout.EAST, sendTweet, -10, SpringLayout.EAST, this);
+		layout.putConstraint(SpringLayout.NORTH, searchTwitter, 28, SpringLayout.SOUTH, blueSlider);
+		layout.putConstraint(SpringLayout.WEST, searchTwitter, 0, SpringLayout.WEST, redSlider);
 	}
 
 	/**
@@ -152,6 +160,72 @@ public class ChatOptionsPanel extends JPanel
 				setChatWindowColor();
 			}
 		});
+		save.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+
+				save();
+			}
+		});
+		load.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				showTheMessage();
+			}
+		});
+	}
+
+	private void save()
+	{
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Directory Selector");
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+		int result = fileChooser.showDialog(this, "select Directory");
+		if (result == JFileChooser.APPROVE_OPTION)
+		{
+			String directory;
+			if (Files.exists(Paths.get(fileChooser.getSelectedFile().toURI())))
+			{
+				directory = fileChooser.getSelectedFile().getPath();
+			} else
+			{
+				directory = fileChooser.getCurrentDirectory().getPath();
+			}
+			String fileName = directory + "/" + JOptionPane.showInputDialog("please enter a name for this conversation");
+			System.out.println(fileName);
+			String time = Integer.toString(LocalDateTime.now().getMinute());
+			if (time.length() == 1)
+			{
+				time = "0" + time;
+			}
+			String hour;
+			String amPm;
+			int timeHour = LocalDateTime.now().getHour();
+			if (timeHour <= 12)
+			{
+				hour = Integer.toString(timeHour);
+				amPm = "Am";
+			} else
+			{
+				timeHour = timeHour - 12;
+				hour = Integer.toString(timeHour);
+				amPm = "Pm";
+
+			}
+			LocalDateTime current = LocalDateTime.now();
+			String timeStamp = current.getMonth() + " " + current.getDayOfMonth() + " At " + hour + "-" + time + amPm;
+			FileController.saveFile(controller, fileName +"-"+ timeStamp, parent.getConversation());
+		}
+	}
+
+	private void showTheMessage()
+	{
+		String fileName = JOptionPane.showInputDialog("please enter a name for this conversation");
+		JOptionPane.showMessageDialog(this, FileController.readFile(controller, fileName));
 	}
 
 	/**
