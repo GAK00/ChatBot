@@ -172,11 +172,23 @@ public class ChatOptionsPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent click)
 			{
-				showTheMessage();
+				load();
 			}
 		});
+		sendTweet.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				sendTweet();
+			}
+		});
+		
 	}
-
+	
+	private void sendTweet()
+	{
+		controller.sendTweet(JOptionPane.showInputDialog("Please Enter you Message"));
+	}
 	private void save()
 	{
 		JFileChooser fileChooser = new JFileChooser();
@@ -222,7 +234,7 @@ public class ChatOptionsPanel extends JPanel
 		}
 	}
 
-	private void showTheMessage()
+	private void load()
 	{
 		String fileName = JOptionPane.showInputDialog("please enter a name for this conversation");
 		JOptionPane.showMessageDialog(this, FileController.readFile(controller, fileName));

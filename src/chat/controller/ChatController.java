@@ -1,14 +1,9 @@
 package chat.controller;
 
 import java.awt.Color;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Random;
 
+import chat.model.CTECTwitter;
 import chat.model.Chatbot;
 import chat.model.FileController;
 import chat.view.ChatFrame;
@@ -27,6 +22,7 @@ public class ChatController
 	String addQuestion;
 	private FileController fileHandler;
 	private boolean yesNo;
+	CTECTwitter twitter;
 
 	// 0 for memes
 	// 1 for politics
@@ -41,6 +37,7 @@ public class ChatController
 				isQuitting();
 			}
 		});
+		twitter = new CTECTwitter(this);
 		yesNo = false;
 		fileHandler = new FileController();
 		boolean safeToSave = fileHandler.makeDirectory("ChatData");
@@ -88,7 +85,12 @@ public class ChatController
 		}
 
 	}
-
+	
+	
+	public void sendTweet(String tweet)
+	{
+		twitter.sendTweet(tweet);
+	}
 	public Chatbot getChatbot()
 	{
 
