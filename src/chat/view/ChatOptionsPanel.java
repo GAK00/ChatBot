@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.swing.JButton;
@@ -182,9 +181,22 @@ public class ChatOptionsPanel extends JPanel
 				sendTweet();
 			}
 		});
+		searchTwitter.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent clicked)
+			{
+				getTweet();
+			}
+		});
 		
 	}
-	
+	private void getTweet()
+	{
+		String results = controller.searchTwitter(JOptionPane.showInputDialog("Enter twitter user"));
+		parent.append(results);
+		
+		
+	}
 	private void sendTweet()
 	{
 		controller.sendTweet(JOptionPane.showInputDialog("Please Enter you Message"));

@@ -173,7 +173,11 @@ public class ChatPanel extends JPanel
 			mainDialog.setText(Conversation);
 		}
 	}
-
+	public void append (String toAppend)
+	{
+		Conversation = toAppend +"\n"+Conversation;
+		mainDialog.setText(Conversation);
+	}
 	/**
 	 * creates the options menu
 	 */

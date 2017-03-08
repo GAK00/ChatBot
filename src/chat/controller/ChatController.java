@@ -544,4 +544,11 @@ public class ChatController
 		display.diplayMessage(currentException.getMessage());
 	}
 
+	public String searchTwitter(String username)
+	{
+		String results = "The most popular word by user: " + username +", is ";
+		results += twitter.searchTwitter(username);
+		return results;
+	}
+
 }

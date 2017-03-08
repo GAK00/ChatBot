@@ -15,26 +15,21 @@ public class CTECTwitter
 	private ChatController baseController;
 	private Twitter chatbotTwitter;
 	private List<Status> searchedTweets;
-	private List<String> filter;
+	private List<String> tweetedWords;
+	private String[] filter;
 
 	public CTECTwitter(ChatController baseController)
 	{
 		this.baseController = baseController;
 		this.chatbotTwitter = TwitterFactory.getSingleton();
 		searchedTweets = new ArrayList<Status>();
-		filter = new ArrayList<String>();
-		setupFilter();
+		filter = setupFilter();
 	}
 
-	private void setupFilter()
+	private String[] setupFilter()
 	{
 		String wordList = FileController.readFile(baseController, "Words");
-		filter = Arrays.asList(wordList.split("\n"));
-		System.out.println("size");
-		for(String out : filter)
-		{
-			System.out.println(out);
-		}
+		return wordList.split("\n");
 	}
 
 	public void sendTweet(String tweet)

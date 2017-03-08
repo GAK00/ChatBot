@@ -68,7 +68,7 @@ public class FileController
 			Scanner fileReader = new Scanner(readFile);
 			while (fileReader.hasNextLine())
 			{
-				fileContenets += fileReader.nextLine();
+				fileContenets += "\n"+fileReader.nextLine();
 			}
 		} catch (IOException e)
 		{
