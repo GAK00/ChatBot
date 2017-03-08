@@ -175,7 +175,7 @@ public class ChatPanel extends JPanel
 	}
 	public void append (String toAppend)
 	{
-		Conversation = toAppend +"\n"+Conversation;
+		Conversation = toAppend +"\n\n"+Conversation;
 		mainDialog.setText(Conversation);
 	}
 	/**

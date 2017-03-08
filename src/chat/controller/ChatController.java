@@ -85,12 +85,12 @@ public class ChatController
 		}
 
 	}
-	
-	
+
 	public void sendTweet(String tweet)
 	{
 		twitter.sendTweet(tweet);
 	}
+
 	public Chatbot getChatbot()
 	{
 
@@ -546,7 +546,7 @@ public class ChatController
 
 	public String searchTwitter(String username)
 	{
-		String results = "The most popular word by user: " + username +", is ";
+		String results = "The most popular word by user: " + username + ", is ";
 		results += twitter.searchTwitter(username);
 		return results;
 	}

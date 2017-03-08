@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -188,19 +189,33 @@ public class ChatOptionsPanel extends JPanel
 				getTweet();
 			}
 		});
-		
+
 	}
+
 	private void getTweet()
 	{
-		String results = controller.searchTwitter(JOptionPane.showInputDialog("Enter twitter user"));
+		Thread load = new Thread()
+		{
+			public void run()
+			{
+				JOptionPane pane = new JOptionPane("Loading", JOptionPane.INFORMATION_MESSAGE);
+				JDialog loading = pane.createDialog(null, "Loading");
+				loading.setVisible(true);
+			}
+		};
+		String input = JOptionPane.showInputDialog(this, "Enter twitter user");
+
+		String results = controller.searchTwitter(input);
+		loading.setVisible(false);
 		parent.append(results);
-		
-		
+
 	}
+
 	private void sendTweet()
 	{
 		controller.sendTweet(JOptionPane.showInputDialog("Please Enter you Message"));
 	}
+
 	private void save()
 	{
 		JFileChooser fileChooser = new JFileChooser();
@@ -242,7 +257,7 @@ public class ChatOptionsPanel extends JPanel
 			}
 			LocalDateTime current = LocalDateTime.now();
 			String timeStamp = current.getMonth() + " " + current.getDayOfMonth() + " At " + hour + "-" + time + amPm;
-			FileController.saveFile(controller, fileName +"-"+ timeStamp, parent.getConversation());
+			FileController.saveFile(controller, fileName + "-" + timeStamp, parent.getConversation());
 		}
 	}
 
