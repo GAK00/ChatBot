@@ -1,3 +1,7 @@
+The most popular word by user: billclinton, is great and has been used: 51 times
+
+The most popular word by user: Java, is #Java and has been used: 177 times
+
 The most popular word by user: HillaryClinton, is Trump and has been used: 155 times
 
 The most popular word by user: jordandistrict, is Facebook and has been used: 262 times
