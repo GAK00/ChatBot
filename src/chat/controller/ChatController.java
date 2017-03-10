@@ -30,13 +30,6 @@ public class ChatController
 
 	public ChatController()
 	{
-		Runtime.getRuntime().addShutdownHook(new Thread()
-		{
-			public void run()
-			{
-				isQuitting();
-			}
-		});
 		twitter = new CTECTwitter(this);
 		yesNo = false;
 		fileHandler = new FileController();
@@ -62,6 +55,13 @@ public class ChatController
 	{
 		if (!fileHandler.getIsLocked())
 		{
+			Runtime.getRuntime().addShutdownHook(new Thread()
+			{
+				public void run()
+				{
+					isQuitting();
+				}
+			});
 			baseFrame = new ChatFrame(this);
 			try
 			{
@@ -546,9 +546,11 @@ public class ChatController
 
 	public String searchTwitter(String username)
 	{
-		String results = "The most popular word by user: " + username + ", is ";
-		results += twitter.searchTwitter(username);
-		return results;
+//		String results = "The most popular word by user: " + username + ", is ";
+//		results += twitter.searchTwitter(username);
+//		return results;
+		System.out.println(twitter.findRelatedTopics(username));
+		return "";
 	}
 
 }

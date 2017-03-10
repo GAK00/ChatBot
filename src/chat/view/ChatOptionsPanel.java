@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -194,19 +195,9 @@ public class ChatOptionsPanel extends JPanel
 
 	private void getTweet()
 	{
-		Thread load = new Thread()
-		{
-			public void run()
-			{
-				JOptionPane pane = new JOptionPane("Loading", JOptionPane.INFORMATION_MESSAGE);
-				JDialog loading = pane.createDialog(null, "Loading");
-				loading.setVisible(true);
-			}
-		};
 		String input = JOptionPane.showInputDialog(this, "Enter twitter user");
 
 		String results = controller.searchTwitter(input);
-		loading.setVisible(false);
 		parent.append(results);
 
 	}

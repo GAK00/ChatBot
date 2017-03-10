@@ -1,11 +1,15 @@
 package chat.model;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import chat.controller.ChatController;
+import twitter4j.GeoLocation;
 import twitter4j.Paging;
+import twitter4j.Query;
+import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -63,6 +67,35 @@ public class CTECTwitter
 		}
 	}
 
+	public String[] findRelatedTopics(String topic)
+	{
+		searchedTweets.clear();
+		tweetedWords.clear();
+		String[] results;
+		Query query = new Query(topic);
+		query.setCount(100);
+		query.setGeoCode(new GeoLocation(40.522, -111.939), 5, Query.KILOMETERS);
+		query.setSince("2010-1-1");
+		try
+		{
+			QueryResult result = chatbotTwitter.search(query);
+			
+			for (Status tweet : result.getTweets())
+			{
+				searchedTweets.add(tweet);
+			}
+			turnTweetToWords();
+			
+			results = findMostPopular(5);
+
+		} catch (TwitterException error)
+		{
+			baseController.handleErrors(error);
+			results = null;
+		}
+		return results;
+	}
+
 	private void collectTweets(String username)
 	{
 		searchedTweets.clear();
@@ -91,7 +124,7 @@ public class CTECTwitter
 		turnStatusesToWords();
 		filter();
 		String pop = findMostPopular();
-		//System.out.println(pop);
+		// System.out.println(pop);
 		mostCommon += pop;
 		return mostCommon;
 	}
@@ -125,15 +158,77 @@ public class CTECTwitter
 		}
 		int maxIndex = 0;
 		int maxValue = counts.get(0);
-		for(int index = 1; index<counts.size(); index++)
+		for (int index = 1; index < counts.size(); index++)
 		{
-			if(counts.get(index)>maxValue)
+			if (counts.get(index) > maxValue)
 			{
 				maxValue = counts.get(index);
 				maxIndex = index;
 			}
 		}
-		return removedStrings.get(maxIndex)+" and has been used: " + counts.get(maxIndex)+" times";
+		return removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
+				+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
+	}
+
+	private String[] findMostPopular(int Number)
+	{
+		String[] popWords = new String[Number];
+		List<String> removedStrings = new ArrayList<String>();
+		List<Integer> counts = new ArrayList<Integer>();
+		for (String word : tweetedWords)
+		{
+			word = word.toLowerCase();
+		}
+	
+			int pos = 0;
+			while(pos<tweetedWords.size()-1){
+				System.out.println((double)pos/tweetedWords.size());
+			while (removedStrings.contains(tweetedWords.get(pos)))
+			{
+				pos++;
+			}
+			int count = 0;
+			for (int index = 0; index < tweetedWords.size(); index++)
+			{
+				if (tweetedWords.get(index).equalsIgnoreCase(tweetedWords.get(pos)))
+				{
+					count++;
+				}
+				removedStrings.add(tweetedWords.get(pos));
+				counts.add(count);
+			}}
+		
+		// while (!tweetedWords.isEmpty())
+		// {
+		// String currentSearch = tweetedWords.get(0);
+		// int currentCount = 0;
+		// while (tweetedWords.remove(currentSearch))
+		// {
+		// currentCount++;
+		// }
+		// removedStrings.add(currentSearch);
+		// counts.add(currentCount);
+		// }
+
+		for (int index = 0; index < Number; index++)
+		{
+			int maxIndex = 0;
+			int maxValue = counts.get(0);
+			for (int pos2 = 1; pos2< counts.size(); pos2++)
+			{
+				if (counts.get(pos2) > maxValue)
+				{
+					maxValue = counts.get(pos2);
+					maxIndex = pos2;
+				}
+			}
+
+			popWords[index] = removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
+					+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
+			removedStrings.remove(maxIndex);
+			counts.remove(maxIndex);
+		}
+		return popWords;
 	}
 
 	private void filter()
@@ -141,15 +236,17 @@ public class CTECTwitter
 		removeEmptyText();
 		for (int index = 0; index < tweetedWords.size(); index++)
 		{
-			for (int filterIndex = 0; filterIndex<filter.length; filterIndex++)
+			for (int filterIndex = 0; filterIndex < filter.length; filterIndex++)
 			{
-				//System.out.println(filter[filterIndex]);
+				// System.out.println(filter[filterIndex]);
 				if (tweetedWords.get(index).equalsIgnoreCase(filter[filterIndex]))
 				{
-					//System.out.println("Removing" +filter[filterIndex]);
+					// System.out.println("Removing" +filter[filterIndex]);
 					tweetedWords.remove(index);
-					if(index != 0){
-					index--;}
+					if (index != 0)
+					{
+						index--;
+					}
 				}
 			}
 		}
@@ -161,6 +258,7 @@ public class CTECTwitter
 		{
 			for (String word : currentStatus.getText().split(" "))
 			{
+				word = removePunc(word);
 				tweetedWords.add(word);
 			}
 		}
@@ -172,12 +270,30 @@ public class CTECTwitter
 		{
 			for (String word : currentStatus.getText().split(" "))
 			{
+
 				if (!word.trim().equals("") && !filter(word))
 				{
+					word = removePunc(word);
 					tweetedWords.add(word);
 				}
 			}
 		}
+	}
+
+	private String removePunc(String word)
+	{
+		String punctuation = ".,'?!;:\"(){}^[]<>-@#";
+		String skimed = word;
+		for (int index = 0; index < punctuation.length(); index++)
+		{
+
+			if (skimed.contains(punctuation.substring(index, index + 1)))
+			{
+				skimed = skimed.substring(0, skimed.indexOf(punctuation.charAt(index)))
+						+ skimed.substring(skimed.indexOf(punctuation.charAt(index)) + 1);
+			}
+		}
+		return skimed;
 	}
 
 	private boolean filter(String toFilter)
