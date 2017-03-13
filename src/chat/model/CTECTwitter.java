@@ -73,26 +73,60 @@ public class CTECTwitter
 		tweetedWords.clear();
 		String[] results;
 		Query query = new Query(topic);
-		query.setCount(100);
-		query.setGeoCode(new GeoLocation(40.522, -111.939), 5, Query.KILOMETERS);
+		query.setCount(10000000);
+		query.setGeoCode(new GeoLocation(40.522, -111.939), 25000000, Query.KILOMETERS);
 		query.setSince("2010-1-1");
 		try
 		{
 			QueryResult result = chatbotTwitter.search(query);
-			
+
 			for (Status tweet : result.getTweets())
 			{
 				searchedTweets.add(tweet);
 			}
 			turnTweetToWords();
-			
-			results = findMostPopular(5);
+			System.out.println(tweetedWords.size());
+			results = findMostPopular(20);
 
 		} catch (TwitterException error)
 		{
 			baseController.handleErrors(error);
 			results = null;
 		}
+		return results;
+	}
+
+	public String[] findRelatedTopics(String[] topics)
+	{
+		searchedTweets.clear();
+		tweetedWords.clear();
+		String[] results;
+		for (int index = 0; index < topics.length; index++)
+		{
+			System.out.println("querring " + topics[index]);
+			Query query = new Query(topics[index]);
+			query.setCount(1000);
+			query.setGeoCode(new GeoLocation(40.522, -111.939), 250, Query.KILOMETERS);
+			query.setSince("2010-1-1");
+			try
+			{
+				QueryResult result = chatbotTwitter.search(query);
+				searchedTweets.clear();
+				for (Status tweet : result.getTweets())
+				{
+					searchedTweets.add(tweet);
+				}
+				System.out.println("searched tweets" + searchedTweets.size());
+				turnTweetToWords();
+				System.out.println("words size" + tweetedWords.size());
+
+			} catch (TwitterException error)
+			{
+				baseController.handleErrors(error);
+				results = null;
+			}
+		}
+		results = findMostPopular(100);
 		return results;
 	}
 
@@ -175,18 +209,18 @@ public class CTECTwitter
 		String[] popWords = new String[Number];
 		List<String> removedStrings = new ArrayList<String>();
 		List<Integer> counts = new ArrayList<Integer>();
-		for (String word : tweetedWords)
+		for (int index = 0; index < tweetedWords.size(); index++)
 		{
-			word = word.toLowerCase();
+			tweetedWords.set(index, tweetedWords.get(index).toLowerCase());
 		}
-	
-			int pos = 0;
-			while(pos<tweetedWords.size()-1){
-				System.out.println((double)pos/tweetedWords.size());
-			while (removedStrings.contains(tweetedWords.get(pos)))
-			{
-				pos++;
-			}
+
+		int pos = 0;
+		while (pos < tweetedWords.size())
+		{
+			
+			
+			//System.out.println(DecimalFormat.getPercentInstance().format((double) pos / tweetedWords.size()));
+
 			int count = 0;
 			for (int index = 0; index < tweetedWords.size(); index++)
 			{
@@ -194,10 +228,17 @@ public class CTECTwitter
 				{
 					count++;
 				}
-				removedStrings.add(tweetedWords.get(pos));
-				counts.add(count);
-			}}
-		
+
+			}
+			removedStrings.add(tweetedWords.get(pos));
+			counts.add(count);
+			while (pos < tweetedWords.size() && removedStrings.contains(tweetedWords.get(pos)))
+			{
+
+				pos++;
+			}
+		}
+
 		// while (!tweetedWords.isEmpty())
 		// {
 		// String currentSearch = tweetedWords.get(0);
@@ -209,24 +250,26 @@ public class CTECTwitter
 		// removedStrings.add(currentSearch);
 		// counts.add(currentCount);
 		// }
-
 		for (int index = 0; index < Number; index++)
 		{
-			int maxIndex = 0;
-			int maxValue = counts.get(0);
-			for (int pos2 = 1; pos2< counts.size(); pos2++)
+			if (removedStrings.size() > 0)
 			{
-				if (counts.get(pos2) > maxValue)
+				int maxIndex = 0;
+				int maxValue = counts.get(0);
+				for (int pos2 = 1; pos2 < counts.size(); pos2++)
 				{
-					maxValue = counts.get(pos2);
-					maxIndex = pos2;
+					if (counts.get(pos2) > maxValue)
+					{
+						maxValue = counts.get(pos2);
+						maxIndex = pos2;
+					}
 				}
-			}
 
-			popWords[index] = removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
-					+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
-			removedStrings.remove(maxIndex);
-			counts.remove(maxIndex);
+				popWords[index] = removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
+						+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
+				removedStrings.remove(maxIndex);
+				counts.remove(maxIndex);
+			}
 		}
 		return popWords;
 	}
@@ -287,7 +330,7 @@ public class CTECTwitter
 		for (int index = 0; index < punctuation.length(); index++)
 		{
 
-			if (skimed.contains(punctuation.substring(index, index + 1)))
+			while (skimed.contains(punctuation.substring(index, index + 1)))
 			{
 				skimed = skimed.substring(0, skimed.indexOf(punctuation.charAt(index)))
 						+ skimed.substring(skimed.indexOf(punctuation.charAt(index)) + 1);

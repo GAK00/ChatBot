@@ -549,7 +549,15 @@ public class ChatController
 //		String results = "The most popular word by user: " + username + ", is ";
 //		results += twitter.searchTwitter(username);
 //		return results;
-		System.out.println(twitter.findRelatedTopics(username));
+		String[] topics = twitter.findRelatedTopics(username);
+		for(int index = 0; index<topics.length;index++)
+		{
+			topics[index] = topics[index].substring(0, topics[index].indexOf("and")-1);
+		}
+		for(String word : twitter.findRelatedTopics(topics))
+		{
+			System.out.println(word);
+		}
 		return "";
 	}
 
