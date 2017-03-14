@@ -30,7 +30,7 @@ public class FileController
 		File saveFile;
 		if (fileName.length() > 5)
 		{
-			if (fileName.substring(fileName.length() - 4).equals(".txt"))
+			if (fileName.substring(fileName.length() - 4).equals(".txt")||fileName.substring(fileName.length() - 11).equals(".properties"))
 			{
 				saveFile = new File(fileName);
 			} else
@@ -56,7 +56,7 @@ public class FileController
 	{
 		String fileContenets = "";
 		File readFile;
-		if (fileName.substring(fileName.length() - 4).equals(".txt"))
+		if (fileName.substring(fileName.length() - 4).equals(".txt")||fileName.substring(fileName.length() - 11).equals(".properties"))
 		{
 			readFile = new File(fileName);
 		} else

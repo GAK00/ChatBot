@@ -32,8 +32,6 @@ public class ChatController
 
 	public ChatController()
 	{
-		twitter = new CTECTwitter(this);
-		facebook = new CTECFacebook(this);
 		yesNo = false;
 		fileHandler = new FileController();
 		boolean safeToSave = fileHandler.makeDirectory("ChatData");
@@ -56,6 +54,9 @@ public class ChatController
 	 */
 	public void start()
 	{
+
+		twitter = new CTECTwitter(this);
+		facebook = new CTECFacebook(this);
 		if (!fileHandler.getIsLocked())
 		{
 			Runtime.getRuntime().addShutdownHook(new Thread()
@@ -552,12 +553,13 @@ public class ChatController
 //		String results = "The most popular word by user: " + username + ", is ";
 //		results += twitter.searchTwitter(username);
 //		return results;
-		String[] topics = twitter.findRelatedTopics(username);
+		String[] topics = facebook.findRelatedTopics(username);
+		
 		for(int index = 0; index<topics.length;index++)
 		{
 			topics[index] = topics[index].substring(0, topics[index].indexOf("and")-1);
 		}
-		for(String word : twitter.findRelatedTopics(topics))
+		for(String word : facebook.findRelatedTopics(topics))
 		{
 			System.out.println(word);
 		}

@@ -61,9 +61,9 @@ public class CTECTwitter extends CTECMedia
 			{
 				searchedTweets.add(tweet);
 			}
-			 turnStatusesToFormatedWords();
+			turnStatusesToFormatedWords();
 			System.out.println(tweetedWords.size());
-			results = findMostPopular(20);
+			results = findMostPopular(20,tweetedWords);
 
 		} catch (TwitterException error)
 		{
@@ -94,7 +94,7 @@ public class CTECTwitter extends CTECMedia
 					searchedTweets.add(tweet);
 				}
 				System.out.println("searched tweets" + searchedTweets.size());
-				 turnStatusesToFormatedWords();
+				turnStatusesToFormatedWords();
 				System.out.println("words size" + tweetedWords.size());
 
 			} catch (TwitterException error)
@@ -103,7 +103,7 @@ public class CTECTwitter extends CTECMedia
 				results = null;
 			}
 		}
-		results = findMostPopular(100);
+		results = findMostPopular(100,tweetedWords);
 		return results;
 	}
 
@@ -134,97 +134,10 @@ public class CTECTwitter extends CTECMedia
 		collectStatuses(username);
 		turnStatusesToWords();
 		filter(tweetedWords);
-		String pop = findMostPopular();
+		String pop = findMostPopular(tweetedWords);
 		// System.out.println(pop);
 		mostCommon += pop;
 		return mostCommon;
-	}
-
-	public String findMostPopular()
-	{
-		List<String> removedStrings = new ArrayList<String>();
-		List<Integer> counts = new ArrayList<Integer>();
-		while (!tweetedWords.isEmpty())
-		{
-			String currentSearch = tweetedWords.get(0);
-			int currentCount = 0;
-			while (tweetedWords.remove(currentSearch))
-			{
-				currentCount++;
-			}
-			removedStrings.add(currentSearch);
-			counts.add(currentCount);
-		}
-		int maxIndex = 0;
-		int maxValue = counts.get(0);
-		for (int index = 1; index < counts.size(); index++)
-		{
-			if (counts.get(index) > maxValue)
-			{
-				maxValue = counts.get(index);
-				maxIndex = index;
-			}
-		}
-		return removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
-				+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
-	}
-
-	public String[] findMostPopular(int Number)
-	{
-		String[] popWords = new String[Number];
-		List<String> removedStrings = new ArrayList<String>();
-		List<Integer> counts = new ArrayList<Integer>();
-		for (int index = 0; index < tweetedWords.size(); index++)
-		{
-			tweetedWords.set(index, tweetedWords.get(index).toLowerCase());
-		}
-
-		int pos = 0;
-		while (pos < tweetedWords.size())
-		{
-
-			// System.out.println(DecimalFormat.getPercentInstance().format((double)
-			// pos / tweetedWords.size()));
-
-			int count = 0;
-			for (int index = 0; index < tweetedWords.size(); index++)
-			{
-				if (tweetedWords.get(index).equalsIgnoreCase(tweetedWords.get(pos)))
-				{
-					count++;
-				}
-
-			}
-			removedStrings.add(tweetedWords.get(pos));
-			counts.add(count);
-			while (pos < tweetedWords.size() && removedStrings.contains(tweetedWords.get(pos)))
-			{
-
-				pos++;
-			}
-		}
-		for (int index = 0; index < Number; index++)
-		{
-			if (removedStrings.size() > 0)
-			{
-				int maxIndex = 0;
-				int maxValue = counts.get(0);
-				for (int pos2 = 1; pos2 < counts.size(); pos2++)
-				{
-					if (counts.get(pos2) > maxValue)
-					{
-						maxValue = counts.get(pos2);
-						maxIndex = pos2;
-					}
-				}
-
-				popWords[index] = removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
-						+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
-				removedStrings.remove(maxIndex);
-				counts.remove(maxIndex);
-			}
-		}
-		return popWords;
 	}
 
 	public void turnStatusesToWords()
