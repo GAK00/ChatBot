@@ -15,55 +15,32 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
-public class CTECTwitter
+public class CTECTwitter extends CTECMedia
 {
-	private ChatController baseController;
+
 	private Twitter chatbotTwitter;
 	private List<Status> searchedTweets;
 	private List<String> tweetedWords;
-	private String[] filter;
 
 	public CTECTwitter(ChatController baseController)
 	{
-		this.baseController = baseController;
+		super(baseController);
 		this.chatbotTwitter = TwitterFactory.getSingleton();
 		searchedTweets = new ArrayList<Status>();
 		tweetedWords = new ArrayList<String>();
-		filter = setupFilter();
 	}
 
-	private String[] setupFilter()
-	{
-		int wordCount = 0;
-		Scanner wordScanner = new Scanner(this.getClass().getResourceAsStream("Words.txt"));
-		while (wordScanner.hasNextLine())
-		{
-			wordScanner.nextLine();
-			wordCount++;
-		}
-		String[] boringWords = new String[wordCount];
-		wordCount = 0;
-		wordScanner = new Scanner(this.getClass().getResourceAsStream("Words.txt"));
-		while (wordScanner.hasNextLine())
-		{
-			boringWords[wordCount] = wordScanner.nextLine();
-			wordCount++;
-		}
-		wordScanner.close();
-		return boringWords;
-	}
-
-	public void sendTweet(String tweet)
+	public void sendMessage(String message)
 	{
 		try
 		{
-			chatbotTwitter.updateStatus(tweet);
+			chatbotTwitter.updateStatus(message);
 		} catch (TwitterException tweetError)
 		{
-			baseController.handleErrors(tweetError);
+			getBaseController().handleErrors(tweetError);
 		} catch (Exception otherError)
 		{
-			baseController.handleErrors(otherError);
+			getBaseController().handleErrors(otherError);
 		}
 	}
 
@@ -84,13 +61,13 @@ public class CTECTwitter
 			{
 				searchedTweets.add(tweet);
 			}
-			turnTweetToWords();
+			 turnStatusesToFormatedWords();
 			System.out.println(tweetedWords.size());
 			results = findMostPopular(20);
 
 		} catch (TwitterException error)
 		{
-			baseController.handleErrors(error);
+			getBaseController().handleErrors(error);
 			results = null;
 		}
 		return results;
@@ -117,12 +94,12 @@ public class CTECTwitter
 					searchedTweets.add(tweet);
 				}
 				System.out.println("searched tweets" + searchedTweets.size());
-				turnTweetToWords();
+				 turnStatusesToFormatedWords();
 				System.out.println("words size" + tweetedWords.size());
 
 			} catch (TwitterException error)
 			{
-				baseController.handleErrors(error);
+				getBaseController().handleErrors(error);
 				results = null;
 			}
 		}
@@ -130,7 +107,7 @@ public class CTECTwitter
 		return results;
 	}
 
-	private void collectTweets(String username)
+	public void collectStatuses(String username)
 	{
 		searchedTweets.clear();
 		tweetedWords.clear();
@@ -144,38 +121,26 @@ public class CTECTwitter
 				searchedTweets.addAll(chatbotTwitter.getUserTimeline(username, statusPage));
 			} catch (TwitterException e)
 			{
-				baseController.handleErrors(e);
+				getBaseController().handleErrors(e);
 			}
 			page++;
 		}
 		System.out.println("tweets Loaded: " + searchedTweets.size());
 	}
 
-	public String searchTwitter(String username)
+	public String searchMedia(String username)
 	{
 		String mostCommon = "";
-		collectTweets(username);
+		collectStatuses(username);
 		turnStatusesToWords();
-		filter();
+		filter(tweetedWords);
 		String pop = findMostPopular();
 		// System.out.println(pop);
 		mostCommon += pop;
 		return mostCommon;
 	}
 
-	private void removeEmptyText()
-	{
-		for (int index = 0; index < tweetedWords.size(); index++)
-		{
-			if (tweetedWords.get(index).trim().equals(""))
-			{
-				tweetedWords.remove(index);
-				index--;
-			}
-		}
-	}
-
-	private String findMostPopular()
+	public String findMostPopular()
 	{
 		List<String> removedStrings = new ArrayList<String>();
 		List<Integer> counts = new ArrayList<Integer>();
@@ -204,7 +169,7 @@ public class CTECTwitter
 				+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / tweetedWords.size());
 	}
 
-	private String[] findMostPopular(int Number)
+	public String[] findMostPopular(int Number)
 	{
 		String[] popWords = new String[Number];
 		List<String> removedStrings = new ArrayList<String>();
@@ -217,9 +182,9 @@ public class CTECTwitter
 		int pos = 0;
 		while (pos < tweetedWords.size())
 		{
-			
-			
-			//System.out.println(DecimalFormat.getPercentInstance().format((double) pos / tweetedWords.size()));
+
+			// System.out.println(DecimalFormat.getPercentInstance().format((double)
+			// pos / tweetedWords.size()));
 
 			int count = 0;
 			for (int index = 0; index < tweetedWords.size(); index++)
@@ -238,18 +203,6 @@ public class CTECTwitter
 				pos++;
 			}
 		}
-
-		// while (!tweetedWords.isEmpty())
-		// {
-		// String currentSearch = tweetedWords.get(0);
-		// int currentCount = 0;
-		// while (tweetedWords.remove(currentSearch))
-		// {
-		// currentCount++;
-		// }
-		// removedStrings.add(currentSearch);
-		// counts.add(currentCount);
-		// }
 		for (int index = 0; index < Number; index++)
 		{
 			if (removedStrings.size() > 0)
@@ -274,28 +227,7 @@ public class CTECTwitter
 		return popWords;
 	}
 
-	private void filter()
-	{
-		removeEmptyText();
-		for (int index = 0; index < tweetedWords.size(); index++)
-		{
-			for (int filterIndex = 0; filterIndex < filter.length; filterIndex++)
-			{
-				// System.out.println(filter[filterIndex]);
-				if (tweetedWords.get(index).equalsIgnoreCase(filter[filterIndex]))
-				{
-					// System.out.println("Removing" +filter[filterIndex]);
-					tweetedWords.remove(index);
-					if (index != 0)
-					{
-						index--;
-					}
-				}
-			}
-		}
-	}
-
-	private void turnStatusesToWords()
+	public void turnStatusesToWords()
 	{
 		for (Status currentStatus : searchedTweets)
 		{
@@ -307,7 +239,7 @@ public class CTECTwitter
 		}
 	}
 
-	private void turnTweetToWords()
+	public void turnStatusesToFormatedWords()
 	{
 		for (Status currentStatus : searchedTweets)
 		{
@@ -321,35 +253,6 @@ public class CTECTwitter
 				}
 			}
 		}
-	}
-
-	private String removePunc(String word)
-	{
-		String punctuation = ".,'?!;:\"(){}^[]<>-@#";
-		String skimed = word;
-		for (int index = 0; index < punctuation.length(); index++)
-		{
-
-			while (skimed.contains(punctuation.substring(index, index + 1)))
-			{
-				skimed = skimed.substring(0, skimed.indexOf(punctuation.charAt(index)))
-						+ skimed.substring(skimed.indexOf(punctuation.charAt(index)) + 1);
-			}
-		}
-		return skimed;
-	}
-
-	private boolean filter(String toFilter)
-	{
-		for (String word : filter)
-		{
-			if (toFilter.equalsIgnoreCase(word))
-			{
-				return true;
-			}
-
-		}
-		return false;
 	}
 
 }

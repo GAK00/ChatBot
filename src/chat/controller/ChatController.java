@@ -3,6 +3,7 @@ package chat.controller;
 import java.awt.Color;
 import java.util.Random;
 
+import chat.model.CTECFacebook;
 import chat.model.CTECTwitter;
 import chat.model.Chatbot;
 import chat.model.FileController;
@@ -23,6 +24,7 @@ public class ChatController
 	private FileController fileHandler;
 	private boolean yesNo;
 	CTECTwitter twitter;
+	CTECFacebook facebook;
 
 	// 0 for memes
 	// 1 for politics
@@ -31,6 +33,7 @@ public class ChatController
 	public ChatController()
 	{
 		twitter = new CTECTwitter(this);
+		facebook = new CTECFacebook(this);
 		yesNo = false;
 		fileHandler = new FileController();
 		boolean safeToSave = fileHandler.makeDirectory("ChatData");
@@ -88,7 +91,7 @@ public class ChatController
 
 	public void sendTweet(String tweet)
 	{
-		twitter.sendTweet(tweet);
+		twitter.sendMessage(tweet);
 	}
 
 	public Chatbot getChatbot()
