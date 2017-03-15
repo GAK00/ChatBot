@@ -478,30 +478,30 @@ public class ChatController
 		String topic = "";
 		switch (rand)
 		{
-		case 0:
-			topic = "What is this strange ";
-			break;
-		case 1:
-			topic = "Could you elaborate on ";
-			break;
-		case 2:
-			topic = "i am confused by the concept of ";
-			break;
-		case 3:
-			topic = "Cannont compute ";
-			break;
-		case 4:
-			topic = "error 404 chat response not found for ";
-			break;
-		case 5:
-			topic = "Why do you assume I know about ";
-			break;
-		case 6:
-			topic = "I like cats more than I like ";
-			break;
-		default:
-			topic = "fatal error your computer is now a bomb run!!!!";
-			break;
+			case 0:
+				topic = "What is this strange ";
+				break;
+			case 1:
+				topic = "Could you elaborate on ";
+				break;
+			case 2:
+				topic = "i am confused by the concept of ";
+				break;
+			case 3:
+				topic = "Cannont compute ";
+				break;
+			case 4:
+				topic = "error 404 chat response not found for ";
+				break;
+			case 5:
+				topic = "Why do you assume I know about ";
+				break;
+			case 6:
+				topic = "I like cats more than I like ";
+				break;
+			default:
+				topic = "fatal error your computer is now a bomb run!!!!";
+				break;
 
 		}
 		return topic;
@@ -548,22 +548,24 @@ public class ChatController
 		display.diplayMessage(currentException.getMessage());
 	}
 
-	public String searchTwitter(String username)
+	public String searchTwitter()
 	{
-//		String results = "The most popular word by user: " + username + ", is ";
-//		results += twitter.searchTwitter(username);
-//		return results;
-		String[] topics = facebook.findRelatedTopics(username);
+		String toReturn = "Other possible poltical topics from the internet are:";
+		String[] topic = new String[stupidBot.getPoliticalTopicList().size()];
+		topic = stupidBot.getPoliticalTopicList().toArray(topic);
+		String[] extraTopics = facebook.findRelatedTopics(topic);
+		if(extraTopics != null){
+		for(int index = 0; index<extraTopics.length;index++)
+		{
+			extraTopics[index] = extraTopics[index].substring(0, extraTopics[index].indexOf("and")-1);
+		}
+		for(int index = 0; index<extraTopics.length;index++)
+		{
+			toReturn += "\n"+extraTopics[index];
+		}
 		
-		for(int index = 0; index<topics.length;index++)
-		{
-			topics[index] = topics[index].substring(0, topics[index].indexOf("and")-1);
+		
 		}
-		for(String word : facebook.findRelatedTopics(topics))
-		{
-			System.out.println(word);
-		}
-		return "";
+		return toReturn;
 	}
-
 }

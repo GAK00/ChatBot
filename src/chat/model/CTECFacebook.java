@@ -1,14 +1,15 @@
 package chat.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 import chat.controller.ChatController;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
+import facebook4j.Page;
 import facebook4j.Post;
 import facebook4j.Reading;
 import facebook4j.auth.AccessToken;
@@ -34,30 +35,18 @@ public class CTECFacebook extends CTECMedia
 		posts.clear();
 		words.clear();
 		String[] results = null;
-		for (int index = 0; index < 100; index++)
-		{
 			try
 			{
-				posts.addAll(facebook.getFeed(Integer.toString(index)));
+				List<Page> pages = facebook.search().searchPages(topic);
+				for(Page page : pages)
+				{
+					posts.addAll(facebook.getFeed(page.getId()));
+				}
 			} catch (FacebookException e)
 			{
-				System.out.println(index);
+				getBaseController().handleErrors(e);
 			}
-			System.out.println(posts.size());
-		}
-		for (int index = 0; index < posts.size(); index++)
-		{
-			if (!posts.get(index).getMessage().toLowerCase().contains(topic.toLowerCase()))
-			{
-				posts.remove(index);
-				index--;
-			}
-		}
 		turnStatusesToFormatedWords();
-		for (String word : words)
-		{
-			System.out.println(word);
-		}
 		results = this.findMostPopular(20, words);
 		return results;
 	}
@@ -70,23 +59,16 @@ public class CTECFacebook extends CTECMedia
 		for (int index = 0; index < topics.length; index++)
 		{
 			posts.clear();
-			for (int index2 = 0; index2 < 100; index2++)
+			try
 			{
-				try
+				List<Page> pages = facebook.search().searchPages(topics[index]);
+				for(Page page : pages)
 				{
-					posts = facebook.getFeed(Integer.toString(index));
-				} catch (FacebookException e)
-				{
-					System.out.println(index);
+					posts.addAll(facebook.getFeed(page.getId()));
 				}
-			}
-			for (int index2 = 0; index2 < posts.size(); index2++)
+			} catch (FacebookException e)
 			{
-				if (!posts.get(index2).getMessage().toLowerCase().contains(topics[index].toLowerCase()))
-				{
-					posts.remove(index2);
-					index--;
-				}
+				getBaseController().handleErrors(e);
 			}
 			turnStatusesToFormatedWords();
 
@@ -110,14 +92,16 @@ public class CTECFacebook extends CTECMedia
 	{
 		for (Post post : posts)
 		{
-			for (String word : post.getMessage().split(" "))
+			if(post.getMessage()!=null){
+			for (String word :
+				post.getMessage().split(" "))
 			{
 				if (!word.trim().equalsIgnoreCase("") && !filter(word) && !(word == null))
 				{
 					word = removePunc(word);
 					words.add(word);
 				}
-			}
+			}}
 		}
 	}
 

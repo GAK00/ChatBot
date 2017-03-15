@@ -196,9 +196,33 @@ public class ChatOptionsPanel extends JPanel
 	private void getTweet()
 	{
 		String input = JOptionPane.showInputDialog(this, "Enter twitter user");
+		JOptionPane pane = new JOptionPane("Loading",JOptionPane.INFORMATION_MESSAGE);
+		final JDialog dialog = pane.createDialog(this, "Title");
+		dialog.setModal(false);
+		Thread thread = new Thread()
 
-		String results = controller.searchTwitter(input);
-		parent.append(results);
+		{
+			public void run()
+			{
+
+				String results = controller.searchTwitter();
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					public void run()
+					{
+						dialog.setVisible(false);
+						parent.append(results);
+					};
+					public void interrupt()
+					{
+					}
+					
+				});
+
+			}
+		};
+		thread.start();
+		dialog.setVisible(true);
 
 	}
 
