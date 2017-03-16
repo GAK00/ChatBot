@@ -46,20 +46,25 @@ public class CTECTwitter extends CTECMedia
 
 	public String[] findRelatedTopics(String topic)
 	{
+		this.setPercentComplete(0);
+		this.setPrefix("Loading for: " + topic);
 		searchedTweets.clear();
 		tweetedWords.clear();
 		String[] results;
 		Query query = new Query(topic);
-		query.setCount(10000000);
-		query.setGeoCode(new GeoLocation(40.522, -111.939), 25000000, Query.KILOMETERS);
+		query.setCount(100);
+		query.setGeoCode(new GeoLocation(40.522, -111.939), 25000, Query.KILOMETERS);
 		query.setSince("2010-1-1");
 		try
 		{
+			this.setPrefix("downloading tweets for: " + topic);
 			QueryResult result = chatbotTwitter.search(query);
-
+			this.setPercentComplete(0.50);
+			int tweetSize = result.getTweets().size();
 			for (Status tweet : result.getTweets())
 			{
 				searchedTweets.add(tweet);
+				this.setPercentComplete(.5+((double)searchedTweets.size()/tweetSize)/2);
 			}
 			turnStatusesToFormatedWords();
 			System.out.println(tweetedWords.size());
@@ -80,22 +85,25 @@ public class CTECTwitter extends CTECMedia
 		String[] results;
 		for (int index = 0; index < topics.length; index++)
 		{
-			System.out.println("querring " + topics[index]);
+			this.setPercentComplete(0);
+			this.setPrefix("Loading for: " + topics[index]);
 			Query query = new Query(topics[index]);
 			query.setCount(1000);
 			query.setGeoCode(new GeoLocation(40.522, -111.939), 250, Query.KILOMETERS);
 			query.setSince("2010-1-1");
 			try
 			{
+				this.setPrefix("downloading tweets for: " + topics[index]);
 				QueryResult result = chatbotTwitter.search(query);
+				this.setPercentComplete(0.50);
 				searchedTweets.clear();
+				int tweetSize = result.getTweets().size();
 				for (Status tweet : result.getTweets())
 				{
 					searchedTweets.add(tweet);
+					this.setPercentComplete(.5+((double)searchedTweets.size()/tweetSize)/2);
 				}
-				System.out.println("searched tweets" + searchedTweets.size());
 				turnStatusesToFormatedWords();
-				System.out.println("words size" + tweetedWords.size());
 
 			} catch (TwitterException error)
 			{
@@ -111,6 +119,8 @@ public class CTECTwitter extends CTECMedia
 	{
 		searchedTweets.clear();
 		tweetedWords.clear();
+		this.setPrefix("downloading data for user: " + username);
+		this.setPercentComplete(0);
 		Paging statusPage = new Paging(1, 100);
 		int page = 1;
 		while (page <= 10)
@@ -118,18 +128,21 @@ public class CTECTwitter extends CTECMedia
 			statusPage.setPage(page);
 			try
 			{
-				searchedTweets.addAll(chatbotTwitter.getUserTimeline(username, statusPage));
+				List<Status> results =chatbotTwitter.getUserTimeline(username, statusPage);
+				searchedTweets.addAll(results);
+				this.setPercentComplete(100);
 			} catch (TwitterException e)
 			{
 				getBaseController().handleErrors(e);
 			}
 			page++;
 		}
-		System.out.println("tweets Loaded: " + searchedTweets.size());
 	}
 
 	public String searchMedia(String username)
 	{
+		this.setPrefix("loading");
+		this.setPercentComplete(0);
 		String mostCommon = "";
 		collectStatuses(username);
 		turnStatusesToWords();
@@ -142,8 +155,14 @@ public class CTECTwitter extends CTECMedia
 
 	public void turnStatusesToWords()
 	{
+		this.setPrefix("Converting tweets to words");
+		this.setPercentComplete(0);
+		double processed =0;
+		int toProcess = searchedTweets.size();
 		for (Status currentStatus : searchedTweets)
 		{
+			processed++;
+			this.setPercentComplete(processed/toProcess);
 			for (String word : currentStatus.getText().split(" "))
 			{
 				word = removePunc(word);
@@ -154,11 +173,17 @@ public class CTECTwitter extends CTECMedia
 
 	public void turnStatusesToFormatedWords()
 	{
+		this.setPercentComplete(0);
+		this.setPrefix("Formatting");
+		double processed =0;
+		int toProcess = searchedTweets.size();
 		for (Status currentStatus : searchedTweets)
 		{
+			processed++;
+			this.setPercentComplete(processed/toProcess);
 			for (String word : currentStatus.getText().split(" "))
 			{
-
+				
 				if (!word.trim().equals("") && !filter(word))
 				{
 					word = removePunc(word);

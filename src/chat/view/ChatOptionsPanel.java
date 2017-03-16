@@ -1,12 +1,15 @@
 package chat.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,7 +19,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -195,10 +197,8 @@ public class ChatOptionsPanel extends JPanel
 
 	private void getTweet()
 	{
-		String input = JOptionPane.showInputDialog(this, "Enter twitter user");
-		JOptionPane pane = new JOptionPane("Loading",JOptionPane.INFORMATION_MESSAGE);
-		final JDialog dialog = pane.createDialog(this, "Title");
-		dialog.setModal(false);
+		
+		//String input = JOptionPane.showInputDialog(this, "Enter twitter user");
 		Thread thread = new Thread()
 
 		{
@@ -206,23 +206,47 @@ public class ChatOptionsPanel extends JPanel
 			{
 
 				String results = controller.searchTwitter();
-				SwingUtilities.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						dialog.setVisible(false);
-						parent.append(results);
-					};
-					public void interrupt()
-					{
-					}
-					
-				});
+//				SwingUtilities.invokeLater(new Runnable()
+//				{
+//					public void run()
+//					{
+//						dialog.setVisible(false);
+//						parent.append(results);
+//					};
+//					
+//				});
 
 			}
 		};
 		thread.start();
-		dialog.setVisible(true);
+		Timer timer = new Timer();
+		JOptionPane pane = new JOptionPane(controller.getStatus());
+		JDialog dialog = pane.createDialog(this, "idgaf");
+		while(thread.isAlive())
+		{
+			
+			//System.out.println(controller.getStatus());
+			pane.setMessage(controller.getStatus());
+			TimerTask task = new TimerTask(){
+
+				@Override
+				public void run()
+				{
+					dialog.setVisible(false);
+					
+				}};
+				timer.schedule(task, 500);
+				dialog.setVisible(true);
+			// try
+			// {
+			// Thread.sleep(100);
+			// dialog.dispose();
+			// } catch (Exception e)
+			// {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
+		}
 
 	}
 

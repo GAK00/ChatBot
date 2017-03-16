@@ -568,4 +568,8 @@ public class ChatController
 		}
 		return toReturn;
 	}
+	public String getStatus()
+	{
+		return twitter.getPercentComplete();
+	}
 }

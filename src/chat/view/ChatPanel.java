@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.text.DefaultCaret;
 
 import chat.controller.ChatController;
@@ -205,6 +207,28 @@ public class ChatPanel extends JPanel
 	public void setConversation(String Conversation)
 	{
 		this.Conversation = Conversation;
+	}
+	
+	public void displayLoad(SwingWorker thread)
+	{
+
+		mainDialog.setText("");
+		while(!thread.isDone())
+		{
+			System.out.println(controller.getStatus());
+			mainDialog.append(controller.getStatus());
+			this.repaint();
+			this.revalidate();
+			try
+			{
+				Thread.sleep(100);
+			} catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		mainDialog.setText(Conversation);
 	}
 
 }

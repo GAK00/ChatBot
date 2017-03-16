@@ -11,18 +11,37 @@ public abstract class CTECMedia implements Interactable
 {
 	private ChatController baseController;
 	private String[] filter;
+	private double percentComplete;
+	private String percentPrefix;
+	
 
 	public CTECMedia(ChatController baseController)
 	{
 		this.baseController = baseController;
 		filter = setupFilter();
+		percentComplete = 0;
+		percentPrefix = "";
 	}
 
+	
+	
 	public ChatController getBaseController()
 	{
 		return baseController;
 	}
 
+	public String getPercentComplete()
+	{
+		return percentPrefix +" "+DecimalFormat.getPercentInstance().format(percentComplete);
+	}
+	protected void setPrefix(String prefix)
+	{
+		this.percentPrefix = prefix;
+	}
+	protected void setPercentComplete(double percentComplete)
+	{
+		this.percentComplete = percentComplete;
+	}
 	public String[] getFilter()
 	{
 		return filter;
@@ -51,12 +70,17 @@ public abstract class CTECMedia implements Interactable
 
 	public void filter(List<String> words)
 	{
+		this.percentComplete= 0;
+		this.percentPrefix = "Filtering";
 		removeEmptyText(words);
+		this.percentComplete = .2;
+		int  size = words.size();
 		for (int index = 0; index < words.size(); index++)
 		{
+			this.percentComplete = .2+ ((double)index/size)/1.25;
 			for (int filterIndex = 0; filterIndex < filter.length; filterIndex++)
 			{
-				// System.out.println(filter[filterIndex]);
+			
 				if (words.get(index).equalsIgnoreCase(filter[filterIndex]))
 				{
 					// System.out.println("Removing" +filter[filterIndex]);
@@ -113,36 +137,9 @@ public abstract class CTECMedia implements Interactable
 
 	public String findMostPopular(List<String> words)
 	{
-		List<String> removedStrings = new ArrayList<String>();
-		List<Integer> counts = new ArrayList<Integer>();
-		while (!words.isEmpty())
-		{
-			String currentSearch = words.get(0);
-			int currentCount = 0;
-			while (words.remove(currentSearch))
-			{
-				currentCount++;
-			}
-			removedStrings.add(currentSearch);
-			counts.add(currentCount);
-		}
-		int maxIndex = 0;
-		int maxValue = counts.get(0);
-		for (int index = 1; index < counts.size(); index++)
-		{
-			if (counts.get(index) > maxValue)
-			{
-				maxValue = counts.get(index);
-				maxIndex = index;
-			}
-		}
-		return removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
-				+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / words.size());
-	}
-
-	public String[] findMostPopular(int Number,List<String> words)
-	{
-		String[] popWords = new String[Number];
+		this.percentPrefix = "Sorting";
+		this.percentComplete = 0;
+		String popWord = "";
 		List<String> removedStrings = new ArrayList<String>();
 		List<Integer> counts = new ArrayList<Integer>();
 		for (int index = 0; index < words.size(); index++)
@@ -151,12 +148,9 @@ public abstract class CTECMedia implements Interactable
 		}
 
 		int pos = 0;
+		int size = words.size();
 		while (pos < words.size())
 		{
-
-			// System.out.println(DecimalFormat.getPercentInstance().format((double)
-			// pos / tweetedWords.size()));
-
 			int count = 0;
 			for (int index = 0; index < words.size(); index++)
 			{
@@ -170,12 +164,69 @@ public abstract class CTECMedia implements Interactable
 			counts.add(count);
 			while (pos < words.size() && removedStrings.contains(words.get(pos)))
 			{
-
 				pos++;
 			}
+			this.percentComplete = ((double)pos/size)/1.1;
+		}
+			if (removedStrings.size() > 0)
+			{
+				int maxIndex = 0;
+				int maxValue = counts.get(0);
+				for (int pos2 = 1; pos2 < counts.size(); pos2++)
+				{
+					if (counts.get(pos2) > maxValue)
+					{
+						maxValue = counts.get(pos2);
+						maxIndex = pos2;
+						this.percentComplete = .9+ ((double)pos/size)/10;
+					}
+				}
+
+				popWord = removedStrings.get(maxIndex) + " and has been used: " + counts.get(maxIndex) + " times" + "or "
+						+ DecimalFormat.getPercentInstance().format((double) counts.get(maxIndex) / words.size());
+				removedStrings.remove(maxIndex);
+				counts.remove(maxIndex);
+			}
+		
+		return popWord;
+	}
+
+	public String[] findMostPopular(int Number,List<String> words)
+	{
+		this.percentPrefix = "Sorting";
+		this.percentComplete = 0;
+		String[] popWords = new String[Number];
+		List<String> removedStrings = new ArrayList<String>();
+		List<Integer> counts = new ArrayList<Integer>();
+		for (int index = 0; index < words.size(); index++)
+		{
+			words.set(index, words.get(index).toLowerCase());
+		}
+
+		int pos = 0;
+		int size = words.size();
+		while (pos < words.size())
+		{
+			int count = 0;
+			for (int index = 0; index < words.size(); index++)
+			{
+				if (words.get(index).equalsIgnoreCase(words.get(pos)))
+				{
+					count++;
+				}
+
+			}
+			removedStrings.add(words.get(pos));
+			counts.add(count);
+			while (pos < words.size() && removedStrings.contains(words.get(pos)))
+			{
+				pos++;
+			}
+			this.percentComplete = ((double)pos/size)/1.5;
 		}
 		for (int index = 0; index < Number; index++)
 		{
+			this.percentComplete = 0.8 +( (double)index/Number)/5;
 			if (removedStrings.size() > 0)
 			{
 				int maxIndex = 0;
