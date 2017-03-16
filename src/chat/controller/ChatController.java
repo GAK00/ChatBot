@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 import chat.model.CTECFacebook;
+import chat.model.CTECMedia;
 import chat.model.CTECTwitter;
 import chat.model.Chatbot;
 import chat.model.FileController;
@@ -25,6 +26,7 @@ public class ChatController
 	private boolean yesNo;
 	CTECTwitter twitter;
 	CTECFacebook facebook;
+	CTECMedia media;
 
 	// 0 for memes
 	// 1 for politics
@@ -57,6 +59,7 @@ public class ChatController
 
 		twitter = new CTECTwitter(this);
 		facebook = new CTECFacebook(this);
+		media = twitter;
 		if (!fileHandler.getIsLocked())
 		{
 			Runtime.getRuntime().addShutdownHook(new Thread()
@@ -92,7 +95,7 @@ public class ChatController
 
 	public void sendTweet(String tweet)
 	{
-		twitter.sendMessage(tweet);
+		media.sendMessage(tweet);
 	}
 
 	public Chatbot getChatbot()
@@ -548,28 +551,78 @@ public class ChatController
 		display.diplayMessage(currentException.getMessage());
 	}
 
-	public String searchTwitter()
+	// String[] optionsSearch = new String[]{"Keyword","User","Category"};
+	public String searchMedia(String Option, String input)
 	{
-		String toReturn = "Other possible poltical topics from the internet are:";
-		String[] topic = new String[stupidBot.getPoliticalTopicList().size()];
-		topic = stupidBot.getPoliticalTopicList().toArray(topic);
-		String[] extraTopics = facebook.findRelatedTopics(topic);
-		if(extraTopics != null){
-		for(int index = 0; index<extraTopics.length;index++)
+		if (Option.equals("Category"))
 		{
-			extraTopics[index] = extraTopics[index].substring(0, extraTopics[index].indexOf("and")-1);
+			String toReturn = "Other possible poltical topics from the internet are:";
+			String[] topic;
+			if (input.toLowerCase().contains("politic"))
+			{
+				topic = new String[stupidBot.getPoliticalTopicList().size()];
+				topic = stupidBot.getPoliticalTopicList().toArray(topic);
+			}
+			else if(input.toLowerCase().contains("meme"))
+			{
+				topic = new String[stupidBot.getMemesList().size()];
+				topic = stupidBot.getMemesList().toArray(topic);
+			}
+			else if(input.toLowerCase().contains("greeting"))
+			{
+				topic = new String[stupidBot.getGreetings().size()];
+				topic = stupidBot.getMemesList().toArray(topic);
+			}
+			else 
+			{
+				return "invalid input";
+			}
+			
+			String[] extraTopics = media.findRelatedTopics(topic);
+			if (extraTopics != null)
+			{
+				for (int index = 0; index < extraTopics.length; index++)
+				{
+					toReturn += "\n" + extraTopics[index];
+				}
+
+			}
+			return toReturn;
 		}
-		for(int index = 0; index<extraTopics.length;index++)
+		else if(Option.equals("Keyword"))
 		{
-			toReturn += "\n"+extraTopics[index];
+			String[] results = media.findRelatedTopics(input);
+			String toReturn = "Related words include:";
+			for(int index = 0; index<results.length; index++)
+			{
+				toReturn += "\n"+results[index];
+			}
+			return toReturn;
 		}
-		
-		
+		else if(Option.equals("User"))
+		{
+			String toReturn = media.getMostPopularWord(input);
+			return toReturn;
 		}
-		return toReturn;
+		else
+		{
+			return "error";
+		}
 	}
+
 	public String getStatus()
 	{
-		return twitter.getPercentComplete();
+		return media.getPercentComplete();
+	}
+
+	public void toggleMedia()
+	{
+		if (media instanceof CTECTwitter)
+		{
+			media = facebook;
+		} else
+		{
+			media = twitter;
+		}
 	}
 }

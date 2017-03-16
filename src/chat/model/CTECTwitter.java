@@ -130,7 +130,7 @@ public class CTECTwitter extends CTECMedia
 			{
 				List<Status> results =chatbotTwitter.getUserTimeline(username, statusPage);
 				searchedTweets.addAll(results);
-				this.setPercentComplete(100);
+				this.setPercentComplete(1);
 			} catch (TwitterException e)
 			{
 				getBaseController().handleErrors(e);
@@ -139,7 +139,7 @@ public class CTECTwitter extends CTECMedia
 		}
 	}
 
-	public String searchMedia(String username)
+	public String getMostPopularWord(String username)
 	{
 		this.setPrefix("loading");
 		this.setPercentComplete(0);

@@ -1,7 +1,7 @@
 package chat.view;
 
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -19,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -45,6 +47,9 @@ public class ChatOptionsPanel extends JPanel
 	private JButton sendTweet;
 	private JButton save;
 	private JButton load;
+	private JComboBox<String> mediaSelector;
+	private String currentMedia;
+	private JComboBox<String> searchOptions;
 
 	public ChatOptionsPanel(ChatController controller, ChatPanel parent)
 	{
@@ -65,10 +70,15 @@ public class ChatOptionsPanel extends JPanel
 		setColor.setOpaque(true);
 		setColor.setBorder(new LineBorder(Color.BLACK));
 		setColor.setBackground(new Color(red, green, blue));
-		this.searchTwitter = new JButton("Search Twitter");
-		this.sendTweet = new JButton("Send Tweet");
+		this.searchTwitter = new JButton("Search Media");
+		this.sendTweet = new JButton("Send Media");
 		this.save = new JButton("Save");
 		this.load = new JButton("Load");
+		String[] options = new String[] { "Twitter", "Facebook" };
+		this.mediaSelector = new JComboBox<String>(options);
+		String[] optionsSearch = new String[]{"Keyword","User","Category"};
+		this.searchOptions = new JComboBox<String>(optionsSearch);
+		currentMedia = "Twitter";
 		setupPanel();
 		setupLayout();
 		setupListeners();
@@ -91,6 +101,8 @@ public class ChatOptionsPanel extends JPanel
 		add(sendTweet);
 		add(save);
 		add(load);
+		add(mediaSelector);
+		add(searchOptions);
 	}
 
 	/**
@@ -122,6 +134,12 @@ public class ChatOptionsPanel extends JPanel
 		layout.putConstraint(SpringLayout.EAST, sendTweet, -10, SpringLayout.EAST, this);
 		layout.putConstraint(SpringLayout.NORTH, searchTwitter, 28, SpringLayout.SOUTH, blueSlider);
 		layout.putConstraint(SpringLayout.WEST, searchTwitter, 0, SpringLayout.WEST, redSlider);
+		layout.putConstraint(SpringLayout.NORTH, mediaSelector, 1, SpringLayout.NORTH, searchTwitter);
+		layout.putConstraint(SpringLayout.WEST, mediaSelector, -170, SpringLayout.WEST, sendTweet);
+		layout.putConstraint(SpringLayout.EAST, mediaSelector, -31, SpringLayout.WEST, sendTweet);
+		layout.putConstraint(SpringLayout.NORTH, searchOptions, 6, SpringLayout.SOUTH, searchTwitter);
+		layout.putConstraint(SpringLayout.WEST, searchOptions, 0, SpringLayout.WEST, redSlider);
+		layout.putConstraint(SpringLayout.EAST, searchOptions, 0, SpringLayout.EAST, searchTwitter);
 	}
 
 	/**
@@ -192,61 +210,85 @@ public class ChatOptionsPanel extends JPanel
 				getTweet();
 			}
 		});
+		mediaSelector.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				if (!mediaSelector.getSelectedItem().equals(currentMedia))
+				{
+					currentMedia = (String) mediaSelector.getSelectedItem();
+					controller.toggleMedia();
+				}
+			}
+		});
 
 	}
 
 	private void getTweet()
 	{
-		
-		//String input = JOptionPane.showInputDialog(this, "Enter twitter user");
+
+		// String input = JOptionPane.showInputDialog(this, "Enter twitter
+		// user");
+		String input = JOptionPane.showInputDialog(this,"Enter query");
 		Thread thread = new Thread()
 
 		{
 			public void run()
 			{
 
-				String results = controller.searchTwitter();
-//				SwingUtilities.invokeLater(new Runnable()
-//				{
-//					public void run()
-//					{
-//						dialog.setVisible(false);
-//						parent.append(results);
-//					};
-//					
-//				});
+				String results = controller.searchMedia((String)searchOptions.getSelectedItem(), input);
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					public void run()
+					{
+						parent.append(results);
+					};
+
+				});
 
 			}
 		};
+		
 		thread.start();
 		Timer timer = new Timer();
 		JOptionPane pane = new JOptionPane(controller.getStatus());
-		JDialog dialog = pane.createDialog(this, "idgaf");
-		while(thread.isAlive())
+		JDialog dialog = pane.createDialog(this, "Loading");
+		dialog.setSize(new Dimension(350, 100));
+		Thread disposeThread = new Thread()
 		{
-			
-			//System.out.println(controller.getStatus());
-			pane.setMessage(controller.getStatus());
-			TimerTask task = new TimerTask(){
-
-				@Override
-				public void run()
+			public void run()
+			{
+				while (thread.isAlive() && dialog != null)
 				{
-					dialog.setVisible(false);
-					
-				}};
-				timer.schedule(task, 500);
-				dialog.setVisible(true);
-			// try
-			// {
-			// Thread.sleep(100);
-			// dialog.dispose();
-			// } catch (Exception e)
-			// {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-		}
+					try
+					{
+						Thread.sleep(100);
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				timer.cancel();
+				if (dialog != null)
+				{
+					dialog.dispose();
+				}
+			}
+		};
+
+		TimerTask task = new TimerTask()
+		{
+
+			@Override
+			public void run()
+			{
+				pane.setMessage(controller.getStatus());
+
+			}
+		};
+		timer.schedule(task, 100, 100);
+		disposeThread.start();
+		dialog.setVisible(true);
 
 	}
 

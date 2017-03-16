@@ -7,4 +7,5 @@ public interface Interactable
 	public void turnStatusesToWords();
 	public void turnStatusesToFormatedWords();
 	public void sendMessage(String message);
+	public String getMostPopularWord(String user);
 }
